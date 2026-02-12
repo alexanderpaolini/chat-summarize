@@ -1,0 +1,64 @@
+import { Message, Collection } from "discord.js";
+
+export async function contextResolver(initMessage: Message): Promise<string> {
+    const authorId = initMessage.author.id;
+    const channel = initMessage.channel;
+
+    let beforeId: string | undefined = initMessage.id;
+    const collected: Message[] = [initMessage];
+
+    while (true) {
+        const batch: Collection<string, Message> =
+            await channel.messages.fetch({
+                limit: 100,
+                before: beforeId,
+            });
+
+        if (!batch.size) break;
+
+        const messages = Array.from(batch.values());
+
+        for (const msg of messages) {
+            if (msg.author.id === authorId) {
+                beforeId = undefined;
+                break;
+            }
+
+            collected.push(msg);
+        }
+
+        if (!beforeId) break;
+
+        beforeId = messages[messages.length - 1].id;
+    }
+
+    collected.sort((a, b) => a.createdTimestamp - b.createdTimestamp);
+
+    const res = collected
+        .map(m => {
+            let s = "";
+            s += `${m.author.tag} (${m.author.id}) | ${new Date(
+                m.editedTimestamp ?? m.createdTimestamp
+            ).toLocaleString()}\n`;
+            s += m.content;
+
+            if (m.mentions.users.size) {
+                s += '\n';
+                s += `* mentions (users): ${m.mentions.users
+                    .map(x => `${x.tag} (${x.id})`)
+                    .join(", ")}`;
+            }
+
+            if (m.mentions.channels.size) {
+                s += '\n';
+                s += `* mentions (channels): ${m.mentions.channels
+                    .map(x => `${x.id}`)
+                    .join(", ")}`;
+            }
+
+            return s;
+        })
+        .join("\n\n");
+
+    return res;
+}

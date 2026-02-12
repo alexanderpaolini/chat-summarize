@@ -1,0 +1,28 @@
+{
+  "name": "chat-summarize",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "pnpm with-env tsx src/index.ts",
+    "with-env": "dotenv -e .env --"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.29.3",
+  "dependencies": {
+    "@openrouter/sdk": "^0.8.0",
+    "@t3-oss/env-core": "^0.13.10",
+    "discord.js": "^14.25.1",
+    "winston": "^3.19.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^25.2.3",
+    "dotenv-cli": "^11.0.0",
+    "tsx": "^4.21.0",
+    "with-env": "^1.1.1"
+  }
+}
