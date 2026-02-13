@@ -1,11 +1,12 @@
 import { Message, Collection } from "discord.js";
 
-export async function contextResolver(initMessage: Message): Promise<string> {
+export async function contextResolver(initMessage: Message, botUserId: string): Promise<string> {
     const authorId = initMessage.author.id;
     const channel = initMessage.channel;
 
     let beforeId: string | undefined = initMessage.id;
     const collected: Message[] = [initMessage];
+    let lastNonBotMessageId: string | undefined = undefined;
 
     while (true) {
         const batch: Collection<string, Message> =
@@ -19,17 +20,28 @@ export async function contextResolver(initMessage: Message): Promise<string> {
         const messages = Array.from(batch.values());
 
         for (const msg of messages) {
+            // Skip bot's own messages
+            if (msg.author.id === botUserId) {
+                continue;
+            }
+
             if (msg.author.id === authorId) {
                 beforeId = undefined;
                 break;
             }
 
             collected.push(msg);
+            // Track the last non-bot message for pagination
+            lastNonBotMessageId = msg.id;
         }
 
         if (!beforeId) break;
 
-        beforeId = messages[messages.length - 1].id;
+        // If we didn't find any non-bot messages, we've reached the end
+        if (!lastNonBotMessageId) break;
+
+        beforeId = lastNonBotMessageId;
+        lastNonBotMessageId = undefined; // Reset for next batch
     }
 
     collected.sort((a, b) => a.createdTimestamp - b.createdTimestamp);

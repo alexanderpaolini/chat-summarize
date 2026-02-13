@@ -1,6 +1,6 @@
 import { Client, GatewayIntentBits, GuildTextBasedChannel, Message } from 'discord.js';
 import { env } from './env';
-import { contextResolver } from './lib/contexResolver';
+import { contextResolver } from './lib/contextResolver';
 import { summarize } from './lib/summarize';
 import { logger } from './lib/logger'
 
@@ -22,7 +22,7 @@ client.on('messageCreate', async (message) => {
     await message.channel.sendTyping();
 
     try {
-        const content = await contextResolver(message);
+        const content = await contextResolver(message, client.user!.id);
         const summary = await summarize(content);
 
         logger.info(`summarizing #${(message.channel as GuildTextBasedChannel).name} - ${message.guild.name}`)
