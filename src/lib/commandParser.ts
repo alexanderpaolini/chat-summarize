@@ -31,7 +31,10 @@ export function parseCommand(content: string): ParsedCommand {
     .trim();
 
   // Parse arguments using minimist
-  const argv = minimist(cleanedContent.split(/\s+/), {
+  const args = cleanedContent
+    ? cleanedContent.split(/\s+/).filter((s) => s.length > 0)
+    : [];
+  const argv = minimist(args, {
     boolean: ["allow-summarizer", "S", "tldr", "T", "help", "h"],
     string: ["model", "M", "ttl"],
     alias: {
