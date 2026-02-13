@@ -1,6 +1,8 @@
 import { Message, Collection } from "discord.js";
 import { CommandOptions } from "./commandParser";
 
+const MAX_EMBED_DESCRIPTION_LENGTH = 100;
+
 export async function contextResolver(initMessage: Message, botUserId: string, options: CommandOptions = { allowSummarizer: false }): Promise<string> {
     const authorId = initMessage.author.id;
     const channel = initMessage.channel;
@@ -77,6 +79,52 @@ export async function contextResolver(initMessage: Message, botUserId: string, o
                 s += `* mentions (channels): ${m.mentions.channels
                     .map(x => `${x.id}`)
                     .join(", ")}`;
+            }
+
+            if (m.mentions.roles.size) {
+                s += '\n';
+                s += `* mentions (roles): ${m.mentions.roles
+                    .map(role => `${role.name} (${role.id})`)
+                    .join(", ")}`;
+            }
+
+            if (m.attachments.size) {
+                s += '\n';
+                s += `* attachments: ${m.attachments
+                    .map(attachment => `${attachment.name || 'file'} (${attachment.contentType || 'unknown type'})`)
+                    .join(", ")}`;
+            }
+
+            if (m.embeds.length) {
+                s += '\n';
+                s += `* embeds: ${m.embeds.length} ${m.embeds.length === 1 ? 'embed' : 'embeds'}`;
+                m.embeds.forEach((embed, idx) => {
+                    if (embed.title) {
+                        s += `\n  - [${idx + 1}] ${embed.title}`;
+                    }
+                    if (embed.description) {
+                        const isTruncated = embed.description.length > MAX_EMBED_DESCRIPTION_LENGTH;
+                        const desc = embed.description.substring(0, MAX_EMBED_DESCRIPTION_LENGTH);
+                        s += `\n    ${desc}${isTruncated ? '...' : ''}`;
+                    }
+                });
+            }
+
+            if (m.reactions.cache.size) {
+                s += '\n';
+                s += `* reactions: ${Array.from(m.reactions.cache.values())
+                    .map(reaction => `${reaction.emoji.name} (${reaction.count})`)
+                    .join(", ")}`;
+            }
+
+            if (m.reference) {
+                s += '\n';
+                s += `* reply to message: ${m.reference.messageId}`;
+            }
+
+            if (m.hasThread) {
+                s += '\n';
+                s += `* has thread`;
             }
 
             return s;
