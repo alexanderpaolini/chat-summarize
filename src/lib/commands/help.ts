@@ -25,7 +25,7 @@ export const helpCommand: Command = {
   Available models: ${ALLOWED_MODELS.join(", ")}
 
 **Examples:**
-\`chat summarize\` - Summarize messages until your last message
+\`chat summarize\` - Summarize messages from your previous message to now
 \`@bot summarize -S --amount 100\` - Summarize last 100 messages including bot messages
 \`chat what did Sarah say?\` - Ask a specific question about the conversation
 \`@bot --help\` - Show this help message
