@@ -48,9 +48,8 @@ export function parseCommandOptions(content: string): CommandOptions {
 
     // Validate and parse model
     const modelValue = argv.model;
-    const model = modelValue && ALLOWED_MODELS.includes(modelValue as AllowedModel)
-        ? (modelValue as AllowedModel)
-        : undefined;
+    const isValidModel = modelValue && ALLOWED_MODELS.includes(modelValue as AllowedModel);
+    const model = isValidModel ? (modelValue as AllowedModel) : undefined;
 
     return {
         allowSummarizer: argv['allow-summarizer'] || false,
