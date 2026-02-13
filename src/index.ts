@@ -84,6 +84,7 @@ client.on("messageCreate", async (message) => {
 
   // Handle status check - when message is only a bot mention
   if (isStatusCheck(message)) {
+    logger.info("Status check requested");
     await message.reply({
       content: "ready to summarize!",
       allowedMentions: { repliedUser: true, users: [] },
@@ -95,7 +96,7 @@ client.on("messageCreate", async (message) => {
 
   try {
     logger.info(
-      `summarizing #${(message.channel as GuildTextBasedChannel).name} - ${message.guild.name}`,
+      `Summarizing #${(message.channel as GuildTextBasedChannel).name} - ${message.guild.name}`,
     );
 
     // Parse command options from the message
@@ -107,6 +108,8 @@ client.on("messageCreate", async (message) => {
 
     let replyMsg = message;
     const chunks = splitIntoChunks(summary);
+
+    logger.info(`Sending ${chunks.length} message chunk(s) as reply`);
 
     const msgs = [message];
     for (let i = 0; i < chunks.length; i++) {
@@ -120,19 +123,23 @@ client.on("messageCreate", async (message) => {
       msgs.push(replyMsg);
     }
 
+    const ttl = options.ttl ?? DEFAULT_TTL;
+    logger.info(`Messages will be deleted after ${ttl} seconds`);
+
     await new Promise((r) =>
-      setTimeout(r, (options.ttl ?? DEFAULT_TTL) * 1000),
+      setTimeout(r, ttl * 1000),
     );
     for (const msg of msgs) {
       try {
         await msg.delete();
       } catch (err) {
-        /* void */
+        logger.warn(`Failed to delete message: ${err}`);
       }
     }
+    logger.info("Messages deleted successfully");
   } catch (err) {
     message.reply("FAILED TO SUMMARIZE!");
-    logger.error("failed to summarize messages");
+    logger.error("Failed to summarize messages");
     logger.error(err);
   }
 });

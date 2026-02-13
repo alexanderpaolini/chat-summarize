@@ -1,5 +1,6 @@
 import minimist from "minimist";
 import { ALLOWED_MODELS, type AllowedModel } from "../options";
+import { logger } from "./logger";
 
 export interface CommandOptions {
   ttl?: number;
@@ -55,7 +56,7 @@ export function parseCommandOptions(content: string): CommandOptions {
     modelValue && ALLOWED_MODELS.includes(modelValue as AllowedModel);
   const model = isValidModel ? (modelValue as AllowedModel) : undefined;
 
-  return {
+  const result = {
     ttl: argv["ttl"] ? Number(argv["ttl"]) : undefined,
     tldr: argv["tldr"],
     allowSummarizer: argv["allow-summarizer"] || false,
@@ -63,4 +64,8 @@ export function parseCommandOptions(content: string): CommandOptions {
     query,
     model,
   };
+
+  logger.info(`Parsed command options: ${JSON.stringify(result)}`);
+
+  return result;
 }

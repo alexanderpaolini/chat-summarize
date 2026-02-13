@@ -1,5 +1,6 @@
 import { Message, Collection } from "discord.js";
 import { CommandOptions } from "./commandParser";
+import { logger } from "./logger";
 
 const MAX_EMBED_DESCRIPTION_LENGTH = 100;
 
@@ -10,6 +11,8 @@ export async function contextResolver(
 ): Promise<string> {
   const authorId = initMessage.author.id;
   const channel = initMessage.channel;
+
+  logger.info(`Fetching messages from channel (amount: ${options.amount ?? "auto"})`);
 
   let beforeId: string | undefined = initMessage.id;
   const collected: Message[] = [];
@@ -61,6 +64,8 @@ export async function contextResolver(
   }
 
   collected.sort((a, b) => a.createdTimestamp - b.createdTimestamp);
+
+  logger.info(`Collected ${collected.length} messages for summarization`);
 
   const res = collected
     .map((m) => {
