@@ -91,7 +91,7 @@ export async function contextResolver(initMessage: Message, botUserId: string, o
             if (m.attachments.size) {
                 s += '\n';
                 s += `* attachments: ${m.attachments
-                    .map(attachment => `${attachment.name || 'file'} (${attachment.contentType || 'unknown type'})`)
+                    .map(attachment => `${attachment.name || 'file'} (${attachment.contentType || 'unknown type'}) - ${attachment.url}`)
                     .join(", ")}`;
             }
 
