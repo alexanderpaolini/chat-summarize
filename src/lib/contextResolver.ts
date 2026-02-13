@@ -97,8 +97,13 @@ export async function contextResolver(initMessage: Message, botUserId: string, o
                 s += '\n';
                 s += `* embeds: ${m.embeds.length} embed(s)`;
                 m.embeds.forEach((embed, idx) => {
-                    if (embed.title) s += `\n  - [${idx + 1}] ${embed.title}`;
-                    if (embed.description) s += `: ${embed.description.substring(0, 100)}${embed.description.length > 100 ? '...' : ''}`;
+                    if (embed.title) {
+                        s += `\n  - [${idx + 1}] ${embed.title}`;
+                    }
+                    if (embed.description) {
+                        const desc = embed.description.substring(0, 100);
+                        s += `\n    ${desc}${embed.description.length > 100 ? '...' : ''}`;
+                    }
                 });
             }
 

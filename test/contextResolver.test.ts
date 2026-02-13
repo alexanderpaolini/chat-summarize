@@ -169,6 +169,7 @@ describe('contextResolver', () => {
 
             expect(result).toContain('* embeds: 1 embed(s)');
             expect(result).toContain('[1] Important Link');
+            expect(result).toContain('This is a description');
         });
 
         it('should include reactions when present', async () => {
