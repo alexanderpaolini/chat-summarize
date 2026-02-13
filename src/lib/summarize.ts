@@ -17,7 +17,7 @@ export async function summarize(content: string, query?: string) {
         : "You are an expert summarizer. Summarize the conversation in clear, concise bullet points.\n" +
           "Guidelines:\n" +
           "- Keep it brief\n" +
-          "- Be general, but include specific details when they are important for understanding.\m" +
+          "- Be general, but include specific details when they are important for understanding.\n" +
           "- Mention relevant things using this format: <@{User Snowflake}> ex. <@277183033344524288>; <@{Channel Snowflake}> ex. <#1456394387268571169>\n" +
           "- Any content prefixed with \" * \" is system- provided metadata (e.g., mentions, user IDs, display names). Use it only as supporting context if needed, but do not explicitly quote or summarize it unless essential for clarity.\n" +
           "- Focus only on the actual conversation content.\n" +

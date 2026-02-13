@@ -44,6 +44,6 @@ export function parseCommandOptions(content: string): CommandOptions {
     return {
         allowSummarizer: argv['allow-summarizer'] || false,
         amount: typeof argv.amount === 'number' ? argv.amount : undefined,
-        query: query
+        query
     };
 }
