@@ -29,14 +29,14 @@ export const SUMMARY_SYSTEM_PROMPT =
  * Get the appropriate system prompt based on whether a query is provided
  */
 export function getSystemPrompt(query?: string): string {
-    return query ? QUERY_SYSTEM_PROMPT : SUMMARY_SYSTEM_PROMPT;
+    return query && query.trim() ? QUERY_SYSTEM_PROMPT : SUMMARY_SYSTEM_PROMPT;
 }
 
 /**
  * Format user content based on whether a query is provided
  */
 export function formatUserContent(content: string, query?: string): string {
-    return query 
+    return query && query.trim()
         ? `Question: ${query}\n\nConversation:\n${content}`
         : content;
 }
