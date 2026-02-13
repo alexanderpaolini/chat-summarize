@@ -8,7 +8,8 @@ export async function contextResolver(initMessage: Message, botUserId: string, o
     let beforeId: string | undefined = initMessage.id;
     const collected: Message[] = [initMessage];
     let lastNonBotMessageId: string | undefined = undefined;
-    let messageCount = 0; // Track message count for --amount option
+    // Track message count for --amount option (starting at 1 to include initMessage)
+    let messageCount = 1;
 
     while (true) {
         const batch: Collection<string, Message> =
@@ -22,18 +23,18 @@ export async function contextResolver(initMessage: Message, botUserId: string, o
         const messages = Array.from(batch.values());
 
         for (const msg of messages) {
-            // Skip bot's own messages unless --allow-summarizer is set
-            if (msg.author.bot && !options.allowSummarizer) {
+            // Skip the bot's own messages unless --allow-summarizer is set
+            if (msg.author.id === botUserId && !options.allowSummarizer) {
                 continue;
             }
 
-            // If amount is specified, stop when we reach the limit
-            if (options.amount !== undefined && messageCount >= options.amount) {
+            if (msg.author.id === authorId) {
                 beforeId = undefined;
                 break;
             }
 
-            if (msg.author.id === authorId) {
+            // If amount is specified, stop when we reach the limit
+            if (options.amount !== undefined && messageCount >= options.amount) {
                 beforeId = undefined;
                 break;
             }
@@ -48,9 +49,6 @@ export async function contextResolver(initMessage: Message, botUserId: string, o
 
         // If we didn't find any non-bot messages, we've reached the end
         if (!lastNonBotMessageId) break;
-
-        // If amount is specified and we've reached the limit, stop
-        if (options.amount !== undefined && messageCount >= options.amount) break;
 
         beforeId = lastNonBotMessageId;
         lastNonBotMessageId = undefined; // Reset for next batch
