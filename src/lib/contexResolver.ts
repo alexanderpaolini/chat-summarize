@@ -1,6 +1,6 @@
 import { Message, Collection } from "discord.js";
 
-export async function contextResolver(initMessage: Message): Promise<string> {
+export async function contextResolver(initMessage: Message, botUserId: string): Promise<string> {
     const authorId = initMessage.author.id;
     const channel = initMessage.channel;
 
@@ -22,6 +22,11 @@ export async function contextResolver(initMessage: Message): Promise<string> {
             if (msg.author.id === authorId) {
                 beforeId = undefined;
                 break;
+            }
+
+            // Skip bot's own messages
+            if (msg.author.id === botUserId) {
+                continue;
             }
 
             collected.push(msg);

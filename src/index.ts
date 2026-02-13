@@ -22,7 +22,7 @@ client.on('messageCreate', async (message) => {
     await message.channel.sendTyping();
 
     try {
-        const content = await contextResolver(message);
+        const content = await contextResolver(message, client.user!.id);
         const summary = await summarize(content);
 
         logger.info(`summarizing #${(message.channel as GuildTextBasedChannel).name} - ${message.guild.name}`)
