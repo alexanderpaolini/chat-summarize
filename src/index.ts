@@ -13,8 +13,10 @@ const isPrompt = (m: Message) => {
 
 const isStatusCheck = (m: Message) => {
     // Check if message only mentions the bot with no other content
-    const contentWithoutMention = m.content.replace(/<@!?\d+>/g, '').trim();
-    return m.mentions.users.has(client.user?.id!) && !contentWithoutMention && !m.content.toLowerCase().startsWith("chat summarize");
+    // Remove the bot's own mention and check if anything remains
+    const botMentionPattern = new RegExp(`<@!?${client.user?.id}>`, 'g');
+    const contentWithoutBotMention = m.content.replace(botMentionPattern, '').trim();
+    return m.mentions.users.has(client.user?.id!) && !contentWithoutBotMention;
 };
 
 client.once('clientReady', () => {
