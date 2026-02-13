@@ -129,14 +129,22 @@ client.on("messageCreate", async (message) => {
     await new Promise((r) =>
       setTimeout(r, ttl * 1000),
     );
+
+    let deletionFailures = 0;
     for (const msg of msgs) {
       try {
         await msg.delete();
       } catch (err) {
+        deletionFailures++;
         logger.warn(`Failed to delete message: ${err}`);
       }
     }
-    logger.info("Messages deleted successfully");
+
+    if (deletionFailures === 0) {
+      logger.info("All messages deleted successfully");
+    } else {
+      logger.warn(`Completed with ${deletionFailures} message deletion failure(s)`);
+    }
   } catch (err) {
     message.reply("FAILED TO SUMMARIZE!");
     logger.error("Failed to summarize messages");

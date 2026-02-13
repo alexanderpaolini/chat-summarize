@@ -38,6 +38,6 @@ export async function summarize(
 
   const summary = String(res.choices[0].message.content ?? "SUMMARY FAILED!");
   logger.info(`LLM response received (${summary.length} characters)`);
-  
+
   return summary;
 }

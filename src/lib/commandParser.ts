@@ -65,7 +65,8 @@ export function parseCommandOptions(content: string): CommandOptions {
     model,
   };
 
-  logger.info(`Parsed command options: ${JSON.stringify(result)}`);
+  // Log parsed options (excluding query to avoid logging potentially sensitive user input)
+  logger.info(`Parsed command options: ${JSON.stringify({ ...result, query: result.query ? "[redacted]" : undefined })}`);
 
   return result;
 }
