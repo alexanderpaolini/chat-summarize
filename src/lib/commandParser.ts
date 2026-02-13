@@ -109,7 +109,7 @@ export function parseCommand(content: string): ParsedCommand {
  * Parses command-line style arguments from a Discord message
  * @param content The message content (e.g., "chat summarize --amount 100 -S")
  * @returns Parsed command options
- * @deprecated Use parseCommand instead for new code
+ * @deprecated Use parseCommand instead for new code. This function is maintained for backward compatibility with existing tests.
  */
 export function parseCommandOptions(content: string): CommandOptions {
   // For backward compatibility, we use parseCommand and return only options
