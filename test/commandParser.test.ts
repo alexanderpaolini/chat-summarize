@@ -22,6 +22,11 @@ describe('parseCommandOptions', () => {
             const result = parseCommandOptions('<@123456789>');
             expect(result.query).toBeUndefined();
         });
+
+        it('should return undefined query when only whitespace is provided', () => {
+            const result = parseCommandOptions('chat summarize   ');
+            expect(result.query).toBeUndefined();
+        });
     });
 
     describe('flags with query', () => {

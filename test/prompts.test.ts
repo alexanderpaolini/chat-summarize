@@ -17,6 +17,16 @@ describe('prompts', () => {
             const result = getSystemPrompt(undefined);
             expect(result).toBe(SUMMARY_SYSTEM_PROMPT);
         });
+
+        it('should return summary prompt when query is an empty string', () => {
+            const result = getSystemPrompt('');
+            expect(result).toBe(SUMMARY_SYSTEM_PROMPT);
+        });
+
+        it('should return summary prompt when query is whitespace only', () => {
+            const result = getSystemPrompt('   ');
+            expect(result).toBe(SUMMARY_SYSTEM_PROMPT);
+        });
     });
 
     describe('formatUserContent', () => {
@@ -35,6 +45,16 @@ describe('prompts', () => {
 
         it('should return content as-is when query is undefined', () => {
             const result = formatUserContent(content, undefined);
+            expect(result).toBe(content);
+        });
+
+        it('should return content as-is when query is an empty string', () => {
+            const result = formatUserContent(content, '');
+            expect(result).toBe(content);
+        });
+
+        it('should return content as-is when query is whitespace only', () => {
+            const result = formatUserContent(content, '   ');
             expect(result).toBe(content);
         });
     });

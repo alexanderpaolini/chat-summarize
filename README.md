@@ -57,15 +57,15 @@ This project uses [Vitest](https://vitest.dev/) for testing.
 
 Run tests:
 ```bash
-npm test
+pnpm test
 ```
 
 Run tests in watch mode:
 ```bash
-npm run test:watch
+pnpm run test:watch
 ```
 
 Run tests with UI:
 ```bash
-npm run test:ui
+pnpm run test:ui
 ```
