@@ -19,14 +19,14 @@ export async function contextResolver(initMessage: Message, botUserId: string): 
         const messages = Array.from(batch.values());
 
         for (const msg of messages) {
-            if (msg.author.id === authorId) {
-                beforeId = undefined;
-                break;
-            }
-
             // Skip bot's own messages
             if (msg.author.id === botUserId) {
                 continue;
+            }
+
+            if (msg.author.id === authorId) {
+                beforeId = undefined;
+                break;
             }
 
             collected.push(msg);

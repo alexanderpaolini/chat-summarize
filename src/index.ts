@@ -1,6 +1,6 @@
 import { Client, GatewayIntentBits, GuildTextBasedChannel, Message } from 'discord.js';
 import { env } from './env';
-import { contextResolver } from './lib/contexResolver';
+import { contextResolver } from './lib/contextResolver';
 import { summarize } from './lib/summarize';
 import { logger } from './lib/logger'
 
