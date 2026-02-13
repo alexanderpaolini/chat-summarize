@@ -94,7 +94,8 @@ describe('contextResolver', () => {
 
             const mockAttachment = {
                 name: 'image.png',
-                contentType: 'image/png'
+                contentType: 'image/png',
+                url: 'https://cdn.discordapp.com/attachments/123/456/image.png'
             } as Attachment;
 
             const mockAttachments = new Collection<string, Attachment>();
@@ -126,7 +127,7 @@ describe('contextResolver', () => {
 
             const result = await contextResolver(mockMessage, 'bot123');
 
-            expect(result).toContain('* attachments: image.png (image/png)');
+            expect(result).toContain('* attachments: image.png (image/png) - https://cdn.discordapp.com/attachments/123/456/image.png');
         });
 
         it('should handle attachments without name or contentType', async () => {
@@ -138,7 +139,8 @@ describe('contextResolver', () => {
 
             const mockAttachment = {
                 name: null,
-                contentType: null
+                contentType: null,
+                url: 'https://cdn.discordapp.com/attachments/123/456/unknown.bin'
             } as unknown as Attachment;
 
             const mockAttachments = new Collection<string, Attachment>();
@@ -170,7 +172,7 @@ describe('contextResolver', () => {
 
             const result = await contextResolver(mockMessage, 'bot123');
 
-            expect(result).toContain('* attachments: file (unknown type)');
+            expect(result).toContain('* attachments: file (unknown type) - https://cdn.discordapp.com/attachments/123/456/unknown.bin');
         });
 
         it('should include embeds when present', async () => {
