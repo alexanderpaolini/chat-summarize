@@ -62,14 +62,12 @@ export function parseCommand(content: string): ParsedCommand {
   
   let command = "summarize"; // default command
   let queryParts = nonFlagArgs;
-  
-  // Check if first argument is a known command
+
+  // If a command is explicitly provided, treat the first non-flag argument as the command
   if (nonFlagArgs.length > 0) {
-    const firstArg = nonFlagArgs[0].toLowerCase();
-    if (firstArg === "summarize" || firstArg === "help") {
-      command = firstArg;
-      queryParts = nonFlagArgs.slice(1); // Remove command from query parts
-    }
+    const firstArg = String(nonFlagArgs[0]).toLowerCase();
+    command = firstArg;
+    queryParts = nonFlagArgs.slice(1); // Remove command from query parts
   }
 
   // Extract query from remaining non-flag arguments
