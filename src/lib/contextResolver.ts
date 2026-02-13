@@ -79,6 +79,46 @@ export async function contextResolver(initMessage: Message, botUserId: string, o
                     .join(", ")}`;
             }
 
+            if (m.mentions.roles.size) {
+                s += '\n';
+                s += `* mentions (roles): ${m.mentions.roles
+                    .map(x => `${x.name} (${x.id})`)
+                    .join(", ")}`;
+            }
+
+            if (m.attachments.size) {
+                s += '\n';
+                s += `* attachments: ${m.attachments
+                    .map(x => `${x.name || 'file'} (${x.contentType || 'unknown type'})`)
+                    .join(", ")}`;
+            }
+
+            if (m.embeds.length) {
+                s += '\n';
+                s += `* embeds: ${m.embeds.length} embed(s)`;
+                m.embeds.forEach((embed, idx) => {
+                    if (embed.title) s += `\n  - [${idx + 1}] ${embed.title}`;
+                    if (embed.description) s += `: ${embed.description.substring(0, 100)}${embed.description.length > 100 ? '...' : ''}`;
+                });
+            }
+
+            if (m.reactions.cache.size) {
+                s += '\n';
+                s += `* reactions: ${Array.from(m.reactions.cache.values())
+                    .map(r => `${r.emoji.name} (${r.count})`)
+                    .join(", ")}`;
+            }
+
+            if (m.reference) {
+                s += '\n';
+                s += `* reply to message: ${m.reference.messageId}`;
+            }
+
+            if (m.hasThread) {
+                s += '\n';
+                s += `* has thread`;
+            }
+
             return s;
         })
         .join("\n\n");
