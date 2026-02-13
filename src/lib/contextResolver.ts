@@ -1,6 +1,8 @@
 import { Message, Collection } from "discord.js";
 import { CommandOptions } from "./commandParser";
 
+const MAX_EMBED_DESCRIPTION_LENGTH = 100;
+
 export async function contextResolver(initMessage: Message, botUserId: string, options: CommandOptions = { allowSummarizer: false }): Promise<string> {
     const authorId = initMessage.author.id;
     const channel = initMessage.channel;
@@ -101,8 +103,8 @@ export async function contextResolver(initMessage: Message, botUserId: string, o
                         s += `\n  - [${idx + 1}] ${embed.title}`;
                     }
                     if (embed.description) {
-                        const desc = embed.description.substring(0, 100);
-                        s += `\n    ${desc}${embed.description.length > 100 ? '...' : ''}`;
+                        const desc = embed.description.substring(0, MAX_EMBED_DESCRIPTION_LENGTH);
+                        s += `\n    ${desc}${embed.description.length > MAX_EMBED_DESCRIPTION_LENGTH ? '...' : ''}`;
                     }
                 });
             }
