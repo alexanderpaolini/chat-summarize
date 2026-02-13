@@ -28,10 +28,16 @@ You can customize the summarization behavior with the following options:
   
   Example: `chat summarize --amount 100`
 
+- `--model <model-name>` or `-M <model-name>`  
+  Specify which AI model to use for summarization. Available models:
+  - `google/gemini-2.5-flash-lite` (default)
+  
+  Example: `chat summarize --model google/gemini-2.5-flash-lite`
+
 You can combine multiple options:
 
 ```
-chat summarize -S --amount 50
+chat summarize -S --amount 50 --model google/gemini-2.5-flash-lite
 ```
 
 ### Query Mode
