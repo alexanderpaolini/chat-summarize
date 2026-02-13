@@ -1,12 +1,15 @@
 import { Message, Collection } from "discord.js";
+import { CommandOptions } from "./commandParser";
 
-export async function contextResolver(initMessage: Message, botUserId: string): Promise<string> {
+export async function contextResolver(initMessage: Message, botUserId: string, options: CommandOptions = { allowSummarizer: false }): Promise<string> {
     const authorId = initMessage.author.id;
     const channel = initMessage.channel;
 
     let beforeId: string | undefined = initMessage.id;
     const collected: Message[] = [initMessage];
     let lastNonBotMessageId: string | undefined = undefined;
+    // Track message count for --amount option (starting at 1 to include initMessage)
+    let messageCount = 1;
 
     while (true) {
         const batch: Collection<string, Message> =
@@ -20,17 +23,25 @@ export async function contextResolver(initMessage: Message, botUserId: string): 
         const messages = Array.from(batch.values());
 
         for (const msg of messages) {
-            // Skip bot's own messages
-            if (msg.author.id === botUserId) {
+            // Skip the bot's own messages unless --allow-summarizer is set
+            if (msg.author.id === botUserId && !options.allowSummarizer) {
                 continue;
             }
 
-            if (msg.author.id === authorId) {
+            // If amount is specified, stop when we reach the limit
+            if (options.amount !== undefined && messageCount >= options.amount) {
+                beforeId = undefined;
+                break;
+            }
+
+            // If amount is not specified, stop when we reach the author's previous message
+            if (options.amount === undefined && msg.author.id === authorId) {
                 beforeId = undefined;
                 break;
             }
 
             collected.push(msg);
+            messageCount++;
             // Track the last non-bot message for pagination
             lastNonBotMessageId = msg.id;
         }
