@@ -100,7 +100,7 @@ export const summarizeCommand: Command = {
         );
       }
     } catch (err) {
-      message.reply("FAILED TO SUMMARIZE!");
+      await message.reply("FAILED TO SUMMARIZE!");
       logger.error("Failed to summarize messages");
       logger.error(err);
     }

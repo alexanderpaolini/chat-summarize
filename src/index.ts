@@ -17,8 +17,11 @@ const client = new Client({
 });
 
 const isPrompt = (m: Message) => {
+  const content = m.content.toLowerCase();
   return (
-    m.content.toLowerCase().startsWith("chat") ||
+    content === "chat" ||
+    content.startsWith("chat ") ||
+    content.startsWith("chat\n") ||
     m.mentions.users.has(client.user?.id!)
   );
 };
