@@ -103,8 +103,9 @@ export async function contextResolver(initMessage: Message, botUserId: string, o
                         s += `\n  - [${idx + 1}] ${embed.title}`;
                     }
                     if (embed.description) {
+                        const isTruncated = embed.description.length > MAX_EMBED_DESCRIPTION_LENGTH;
                         const desc = embed.description.substring(0, MAX_EMBED_DESCRIPTION_LENGTH);
-                        s += `\n    ${desc}${embed.description.length > MAX_EMBED_DESCRIPTION_LENGTH ? '...' : ''}`;
+                        s += `\n    ${desc}${isTruncated ? '...' : ''}`;
                     }
                 });
             }
