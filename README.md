@@ -8,6 +8,12 @@ Tired of scrolling up in your channels and reading hundreds of messages? `Chat, 
 
 To use the bot, simply type `chat summarize` in any channel, or mention the bot.
 
+You can also ask specific questions about the conversation:
+
+```
+@bot what did James say about going to Fuji on Thursday?
+```
+
 ### Command Options
 
 You can customize the summarization behavior with the following options:
@@ -26,4 +32,40 @@ You can combine multiple options:
 
 ```
 chat summarize -S --amount 50
+```
+
+### Query Mode
+
+When you provide text after the command or mention, the bot will answer your specific question instead of providing a summary:
+
+```
+chat summarize what did Sarah say about the project?
+@bot who mentioned the meeting?
+```
+
+You can also use flags with queries:
+
+```
+@bot what was discussed yesterday? --amount 200
+```
+
+## Development
+
+### Testing
+
+This project uses [Vitest](https://vitest.dev/) for testing.
+
+Run tests:
+```bash
+pnpm test
+```
+
+Run tests in watch mode:
+```bash
+pnpm run test:watch
+```
+
+Run tests with UI:
+```bash
+pnpm run test:ui
 ```

@@ -3,6 +3,7 @@ import minimist from 'minimist';
 export interface CommandOptions {
     allowSummarizer: boolean;
     amount?: number;
+    query?: string;
 }
 
 /**
@@ -22,7 +23,8 @@ export function parseCommandOptions(content: string): CommandOptions {
     if (!cleanedContent) {
         return {
             allowSummarizer: false,
-            amount: undefined
+            amount: undefined,
+            query: undefined
         };
     }
 
@@ -35,8 +37,13 @@ export function parseCommandOptions(content: string): CommandOptions {
         }
     });
 
+    // Extract query from non-flag arguments
+    const queryParts = argv._.filter(arg => typeof arg === 'string' && arg.trim());
+    const query = queryParts.length > 0 ? queryParts.join(' ').trim() || undefined : undefined;
+
     return {
         allowSummarizer: argv['allow-summarizer'] || false,
-        amount: typeof argv.amount === 'number' ? argv.amount : undefined
+        amount: typeof argv.amount === 'number' ? argv.amount : undefined,
+        query
     };
 }

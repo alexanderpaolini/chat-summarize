@@ -27,7 +27,7 @@ client.on('messageCreate', async (message) => {
         const options = parseCommandOptions(message.content);
         
         const content = await contextResolver(message, client.user!.id, options);
-        const summary = await summarize(content);
+        const summary = await summarize(content, options.query);
 
         logger.info(`summarizing #${(message.channel as GuildTextBasedChannel).name} - ${message.guild.name}`)
 
