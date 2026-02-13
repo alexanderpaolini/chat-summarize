@@ -1,14 +1,12 @@
 import {
   Client,
   GatewayIntentBits,
-  GuildTextBasedChannel,
   Message,
 } from "discord.js";
 import { env } from "./env";
-import { contextResolver } from "./lib/contextResolver";
-import { summarize } from "./lib/summarize";
 import { logger } from "./lib/logger";
-import { parseCommandOptions } from "./lib/commandParser";
+import { parseCommand } from "./lib/commandParser";
+import { commandRegistry } from "./lib/commands";
 
 const client = new Client({
   intents: [
@@ -18,50 +16,15 @@ const client = new Client({
   ],
 });
 
-/** Seconds */
-const DEFAULT_TTL = 60;
-
 const isPrompt = (m: Message) => {
+  const content = m.content.toLowerCase();
   return (
-    m.content.toLowerCase().startsWith("chat summarize") ||
+    content === "chat" ||
+    content.startsWith("chat ") ||
+    content.startsWith("chat\n") ||
     m.mentions.users.has(client.user?.id!)
   );
 };
-
-const MAX_LENGTH = 2000;
-
-function splitIntoChunks(text: string, maxLength = MAX_LENGTH) {
-  const lines = text.split("\n");
-  const chunks = [];
-  let currentChunk = "";
-
-  for (const line of lines) {
-    // If adding this line would exceed limit, push current chunk first
-    if ((currentChunk + line + "\n").length > maxLength) {
-      if (currentChunk.length > 0) {
-        chunks.push(currentChunk);
-        currentChunk = "";
-      }
-
-      // If single line itself exceeds max length, hard-split it
-      if (line.length > maxLength) {
-        for (let i = 0; i < line.length; i += maxLength) {
-          chunks.push(line.slice(i, i + maxLength));
-        }
-      } else {
-        currentChunk = line + "\n";
-      }
-    } else {
-      currentChunk += line + "\n";
-    }
-  }
-
-  if (currentChunk.length > 0) {
-    chunks.push(currentChunk);
-  }
-
-  return chunks;
-}
 
 const isStatusCheck = (m: Message) => {
   // Check if message only mentions the bot with no other content
@@ -92,63 +55,35 @@ client.on("messageCreate", async (message) => {
     return;
   }
 
-  await message.channel.sendTyping();
-
   try {
-    logger.info(
-      `Summarizing #${(message.channel as GuildTextBasedChannel).name} - ${message.guild.name}`,
-    );
-
-    // Parse command options from the message
-    const options = parseCommandOptions(message.content);
-    await message.react("👍");
-
-    const content = await contextResolver(message, client.user!.id, options);
-    const summary = await summarize(content, options.query, options);
-
-    let replyMsg = message;
-    const chunks = splitIntoChunks(summary);
-
-    logger.info(`Sending ${chunks.length} message chunk(s) as reply`);
-
-    const msgs = [message];
-    for (let i = 0; i < chunks.length; i++) {
-      replyMsg = await replyMsg.reply({
-        content: chunks[i],
-
-        allowedMentions: {
-          users: [],
-        },
+    // Parse command from message
+    const parsed = parseCommand(message.content);
+    
+    // Get the command from registry
+    const command = commandRegistry.get(parsed.command);
+    
+    if (!command) {
+      logger.warn(`Unknown command: ${parsed.command}`);
+      await message.reply({
+        content: `Unknown command: \`${parsed.command}\`. Use \`--help\` to see available commands.`,
+        allowedMentions: { users: [] },
       });
-      msgs.push(replyMsg);
+      return;
     }
 
-    const ttl = options.ttl ?? DEFAULT_TTL;
-    logger.info(`Messages will be deleted after ${ttl} seconds`);
-
-    await new Promise((r) =>
-      setTimeout(r, ttl * 1000),
-    );
-
-    let deletionFailures = 0;
-    for (const msg of msgs) {
-      try {
-        await msg.delete();
-      } catch (err) {
-        deletionFailures++;
-        logger.warn(`Failed to delete message: ${err}`);
-      }
-    }
-
-    if (deletionFailures === 0) {
-      logger.info("All messages deleted successfully");
-    } else {
-      logger.warn(`Completed with ${deletionFailures} message deletion failure(s)`);
-    }
+    // Execute the command
+    await command.execute({
+      message,
+      botUserId: client.user!.id,
+      options: parsed.options,
+    });
   } catch (err) {
-    message.reply("FAILED TO SUMMARIZE!");
-    logger.error("Failed to summarize messages");
+    logger.error("Failed to execute command");
     logger.error(err);
+    await message.reply({
+      content: "An error occurred while processing your command.",
+      allowedMentions: { users: [] },
+    });
   }
 });
 
