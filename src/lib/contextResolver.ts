@@ -1,12 +1,14 @@
 import { Message, Collection } from "discord.js";
+import { CommandOptions } from "./commandParser";
 
-export async function contextResolver(initMessage: Message, botUserId: string): Promise<string> {
+export async function contextResolver(initMessage: Message, botUserId: string, options: CommandOptions = { allowSummarizer: false }): Promise<string> {
     const authorId = initMessage.author.id;
     const channel = initMessage.channel;
 
     let beforeId: string | undefined = initMessage.id;
     const collected: Message[] = [initMessage];
     let lastNonBotMessageId: string | undefined = undefined;
+    let messageCount = 0; // Track message count for --amount option
 
     while (true) {
         const batch: Collection<string, Message> =
@@ -20,9 +22,15 @@ export async function contextResolver(initMessage: Message, botUserId: string): 
         const messages = Array.from(batch.values());
 
         for (const msg of messages) {
-            // Skip bot's own messages
-            if (msg.author.id === botUserId) {
+            // Skip bot's own messages unless --allow-summarizer is set
+            if (msg.author.bot && !options.allowSummarizer) {
                 continue;
+            }
+
+            // If amount is specified, stop when we reach the limit
+            if (options.amount !== undefined && messageCount >= options.amount) {
+                beforeId = undefined;
+                break;
             }
 
             if (msg.author.id === authorId) {
@@ -31,6 +39,7 @@ export async function contextResolver(initMessage: Message, botUserId: string): 
             }
 
             collected.push(msg);
+            messageCount++;
             // Track the last non-bot message for pagination
             lastNonBotMessageId = msg.id;
         }
@@ -39,6 +48,9 @@ export async function contextResolver(initMessage: Message, botUserId: string): 
 
         // If we didn't find any non-bot messages, we've reached the end
         if (!lastNonBotMessageId) break;
+
+        // If amount is specified and we've reached the limit, stop
+        if (options.amount !== undefined && messageCount >= options.amount) break;
 
         beforeId = lastNonBotMessageId;
         lastNonBotMessageId = undefined; // Reset for next batch

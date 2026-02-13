@@ -15,7 +15,9 @@
   "dependencies": {
     "@openrouter/sdk": "^0.8.0",
     "@t3-oss/env-core": "^0.13.10",
+    "@types/minimist": "^1.2.5",
     "discord.js": "^14.25.1",
+    "minimist": "^1.2.8",
     "winston": "^3.19.0",
     "zod": "^4.3.6"
   },
@@ -23,6 +25,7 @@
     "@types/node": "^25.2.3",
     "dotenv-cli": "^11.0.0",
     "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
     "with-env": "^1.1.1"
   }
 }
