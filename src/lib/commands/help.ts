@@ -8,7 +8,7 @@ export const helpCommand: Command = {
     const { message } = context;
 
     const helpText = `
-**Chat Summarize Bot - Help**
+**chat, summarize**
 
 **Usage:**
 \`chat [command] [options]\` or \`@bot [command] [options]\`
