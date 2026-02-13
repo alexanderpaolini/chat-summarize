@@ -1,7 +1,7 @@
 /**
  * See https://openrouter.ai/models
  */
-export const DEFAULT_LLM_MODEL = "google/gemini-3-flash-preview";
+export const DEFAULT_LLM_MODEL = "google/gemini-2.5-flash-lite";
 
 /**
  * List of allowed models that users can specify
