@@ -38,8 +38,8 @@ export function parseCommandOptions(content: string): CommandOptions {
     });
 
     // Extract query from non-flag arguments
-    const queryParts = argv._.filter(arg => typeof arg === 'string');
-    const query = queryParts.length > 0 ? queryParts.join(' ') : undefined;
+    const queryParts = argv._.filter(arg => typeof arg === 'string' && arg.trim());
+    const query = queryParts.length > 0 ? queryParts.join(' ').trim() || undefined : undefined;
 
     return {
         allowSummarizer: argv['allow-summarizer'] || false,
