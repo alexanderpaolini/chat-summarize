@@ -31,7 +31,7 @@ client.on('messageCreate', async (message) => {
     // Handle status check - when message is only a bot mention
     if (isStatusCheck(message)) {
         await message.reply({
-            content: "I'm online and ready! Mention me with a question or use `chat summarize` to get a summary.",
+            content: "ready to summarize!",
             allowedMentions: { repliedUser: true, users: [] }
         });
         return;
