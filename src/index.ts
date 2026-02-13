@@ -11,6 +11,12 @@ const isPrompt = (m: Message) => {
     return m.content.toLowerCase().startsWith("chat summarize") || m.mentions.users.has(client.user?.id!)
 };
 
+const isStatusCheck = (m: Message) => {
+    // Check if message only mentions the bot with no other content
+    const contentWithoutMention = m.content.replace(/<@!?\d+>/g, '').trim();
+    return m.mentions.users.has(client.user?.id!) && !contentWithoutMention && !m.content.toLowerCase().startsWith("chat summarize");
+};
+
 client.once('clientReady', () => {
     logger.info(`Logged in as ${client.user?.tag}`)
 });
@@ -19,6 +25,15 @@ client.on('messageCreate', async (message) => {
     if (!message.guild) return;
 
     if (!isPrompt(message)) return;
+
+    // Handle status check - when message is only a bot mention
+    if (isStatusCheck(message)) {
+        await message.reply({
+            content: "I'm online and ready! Mention me with a question or use `chat summarize` to get a summary.",
+            allowedMentions: { repliedUser: true, users: [] }
+        });
+        return;
+    }
 
     await message.channel.sendTyping();
 
