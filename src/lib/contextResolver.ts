@@ -97,7 +97,7 @@ export async function contextResolver(initMessage: Message, botUserId: string, o
 
             if (m.embeds.length) {
                 s += '\n';
-                s += `* embeds: ${m.embeds.length} embed(s)`;
+                s += `* embeds: ${m.embeds.length} ${m.embeds.length === 1 ? 'embed' : 'embeds'}`;
                 m.embeds.forEach((embed, idx) => {
                     if (embed.title) {
                         s += `\n  - [${idx + 1}] ${embed.title}`;

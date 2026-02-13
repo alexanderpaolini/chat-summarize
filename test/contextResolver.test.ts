@@ -167,9 +167,57 @@ describe('contextResolver', () => {
 
             const result = await contextResolver(mockMessage, 'bot123');
 
-            expect(result).toContain('* embeds: 1 embed(s)');
+            expect(result).toContain('* embeds: 1 embed');
             expect(result).toContain('[1] Important Link');
             expect(result).toContain('This is a description');
+        });
+
+        it('should use correct plural form for multiple embeds', async () => {
+            const mockChannel = {
+                messages: {
+                    fetch: vi.fn().mockResolvedValue(new Collection())
+                }
+            };
+
+            const mockEmbed1 = {
+                title: 'First Link',
+                description: 'First description'
+            } as Embed;
+
+            const mockEmbed2 = {
+                title: 'Second Link',
+                description: 'Second description'
+            } as Embed;
+
+            const mockAuthor = {
+                id: '123456789',
+                tag: 'TestUser#1234'
+            } as User;
+
+            const mockMessage = {
+                id: '999',
+                author: mockAuthor,
+                content: 'Check these links',
+                channel: mockChannel,
+                createdTimestamp: 1234567890000,
+                editedTimestamp: null,
+                mentions: {
+                    users: new Collection(),
+                    channels: new Collection(),
+                    roles: new Collection()
+                },
+                attachments: new Collection(),
+                embeds: [mockEmbed1, mockEmbed2],
+                reactions: { cache: new Collection() },
+                reference: null,
+                hasThread: false
+            } as unknown as Message;
+
+            const result = await contextResolver(mockMessage, 'bot123');
+
+            expect(result).toContain('* embeds: 2 embeds');
+            expect(result).toContain('[1] First Link');
+            expect(result).toContain('[2] Second Link');
         });
 
         it('should include reactions when present', async () => {
