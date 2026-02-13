@@ -17,12 +17,16 @@ export async function contextResolver(initMessage: Message, botUserId: string): 
         if (!batch.size) break;
 
         const messages = Array.from(batch.values());
+        let lastNonBotMessageId: string | undefined = undefined;
 
         for (const msg of messages) {
             // Skip bot's own messages
             if (msg.author.id === botUserId) {
                 continue;
             }
+
+            // Track the last non-bot message for pagination
+            lastNonBotMessageId = msg.id;
 
             if (msg.author.id === authorId) {
                 beforeId = undefined;
@@ -34,7 +38,10 @@ export async function contextResolver(initMessage: Message, botUserId: string): 
 
         if (!beforeId) break;
 
-        beforeId = messages[messages.length - 1].id;
+        // If we didn't find any non-bot messages, we've reached the end
+        if (!lastNonBotMessageId) break;
+
+        beforeId = lastNonBotMessageId;
     }
 
     collected.sort((a, b) => a.createdTimestamp - b.createdTimestamp);
