@@ -129,6 +129,50 @@ describe('contextResolver', () => {
             expect(result).toContain('* attachments: image.png (image/png)');
         });
 
+        it('should handle attachments without name or contentType', async () => {
+            const mockChannel = {
+                messages: {
+                    fetch: vi.fn().mockResolvedValue(new Collection())
+                }
+            };
+
+            const mockAttachment = {
+                name: null,
+                contentType: null
+            } as unknown as Attachment;
+
+            const mockAttachments = new Collection<string, Attachment>();
+            mockAttachments.set('att1', mockAttachment);
+
+            const mockAuthor = {
+                id: '123456789',
+                tag: 'TestUser#1234'
+            } as User;
+
+            const mockMessage = {
+                id: '999',
+                author: mockAuthor,
+                content: 'Check this out',
+                channel: mockChannel,
+                createdTimestamp: 1234567890000,
+                editedTimestamp: null,
+                mentions: {
+                    users: new Collection(),
+                    channels: new Collection(),
+                    roles: new Collection()
+                },
+                attachments: mockAttachments,
+                embeds: [],
+                reactions: { cache: new Collection() },
+                reference: null,
+                hasThread: false
+            } as unknown as Message;
+
+            const result = await contextResolver(mockMessage, 'bot123');
+
+            expect(result).toContain('* attachments: file (unknown type)');
+        });
+
         it('should include embeds when present', async () => {
             const mockChannel = {
                 messages: {
