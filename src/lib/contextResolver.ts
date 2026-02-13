@@ -84,14 +84,14 @@ export async function contextResolver(initMessage: Message, botUserId: string, o
             if (m.mentions.roles.size) {
                 s += '\n';
                 s += `* mentions (roles): ${m.mentions.roles
-                    .map(x => `${x.name} (${x.id})`)
+                    .map(role => `${role.name} (${role.id})`)
                     .join(", ")}`;
             }
 
             if (m.attachments.size) {
                 s += '\n';
                 s += `* attachments: ${m.attachments
-                    .map(x => `${x.name || 'file'} (${x.contentType || 'unknown type'})`)
+                    .map(attachment => `${attachment.name || 'file'} (${attachment.contentType || 'unknown type'})`)
                     .join(", ")}`;
             }
 
@@ -113,7 +113,7 @@ export async function contextResolver(initMessage: Message, botUserId: string, o
             if (m.reactions.cache.size) {
                 s += '\n';
                 s += `* reactions: ${Array.from(m.reactions.cache.values())
-                    .map(r => `${r.emoji.name} (${r.count})`)
+                    .map(reaction => `${reaction.emoji.name} (${reaction.count})`)
                     .join(", ")}`;
             }
 
