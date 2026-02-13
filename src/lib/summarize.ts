@@ -1,8 +1,8 @@
-import { LLM_MODEL } from '../options';
+import { DEFAULT_LLM_MODEL } from '../options';
 import { openRouter } from './openRouter';
 import { getSystemPrompt, formatUserContent } from './prompts';
 
-export async function summarize(content: string, query?: string) {
+export async function summarize(content: string, query?: string, model?: string) {
     if (!content.trim()) return "NOTHING TO SUMMARIZE";
 
     const systemPrompt = getSystemPrompt(query);
@@ -10,7 +10,7 @@ export async function summarize(content: string, query?: string) {
 
     const res = await openRouter.chat.send({
         chatGenerationParams: {
-            model: LLM_MODEL,
+            model: model || DEFAULT_LLM_MODEL,
             messages: [
                 {
                     role: 'system',

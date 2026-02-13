@@ -1,9 +1,11 @@
 import minimist from 'minimist';
+import { ALLOWED_MODELS, type AllowedModel } from '../options';
 
 export interface CommandOptions {
     allowSummarizer: boolean;
     amount?: number;
     query?: string;
+    model?: AllowedModel;
 }
 
 /**
@@ -24,16 +26,19 @@ export function parseCommandOptions(content: string): CommandOptions {
         return {
             allowSummarizer: false,
             amount: undefined,
-            query: undefined
+            query: undefined,
+            model: undefined
         };
     }
 
     // Parse arguments using minimist
     const argv = minimist(cleanedContent.split(/\s+/), {
         boolean: ['allow-summarizer', 'S'],
+        string: ['model', 'M'],
         alias: {
             'S': 'allow-summarizer',
-            'N': 'amount'
+            'N': 'amount',
+            'M': 'model'
         }
     });
 
@@ -41,9 +46,16 @@ export function parseCommandOptions(content: string): CommandOptions {
     const queryParts = argv._.filter(arg => typeof arg === 'string' && arg.trim());
     const query = queryParts.length > 0 ? queryParts.join(' ').trim() || undefined : undefined;
 
+    // Validate and parse model
+    const modelValue = argv.model;
+    const model = modelValue && ALLOWED_MODELS.includes(modelValue as AllowedModel)
+        ? (modelValue as AllowedModel)
+        : undefined;
+
     return {
         allowSummarizer: argv['allow-summarizer'] || false,
         amount: typeof argv.amount === 'number' ? argv.amount : undefined,
-        query
+        query,
+        model
     };
 }

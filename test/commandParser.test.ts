@@ -70,4 +70,45 @@ describe('parseCommandOptions', () => {
             expect(result.query).toBeUndefined();
         });
     });
+
+    describe('model flag', () => {
+        it('should parse model flag with long form', () => {
+            const result = parseCommandOptions('chat summarize --model google/gemini-2.5-flash-lite');
+            expect(result.model).toBe('google/gemini-2.5-flash-lite');
+            expect(result.query).toBeUndefined();
+        });
+
+        it('should parse model flag with short form', () => {
+            const result = parseCommandOptions('chat summarize -M google/gemini-2.5-flash-lite');
+            expect(result.model).toBe('google/gemini-2.5-flash-lite');
+            expect(result.query).toBeUndefined();
+        });
+
+        it('should parse model flag with query', () => {
+            const result = parseCommandOptions('chat summarize what happened --model google/gemini-2.5-flash-lite');
+            expect(result.model).toBe('google/gemini-2.5-flash-lite');
+            expect(result.query).toBe('what happened');
+        });
+
+        it('should ignore invalid model', () => {
+            const result = parseCommandOptions('chat summarize --model invalid-model');
+            expect(result.model).toBeUndefined();
+        });
+
+        it('should handle model flag with other flags', () => {
+            const result = parseCommandOptions('chat summarize -S --amount 50 -M google/gemini-2.5-flash-lite');
+            expect(result.allowSummarizer).toBe(true);
+            expect(result.amount).toBe(50);
+            expect(result.model).toBe('google/gemini-2.5-flash-lite');
+            expect(result.query).toBeUndefined();
+        });
+
+        it('should handle model flag with query and other flags', () => {
+            const result = parseCommandOptions('chat summarize what did they say -S -N 100 --model google/gemini-2.5-flash-lite');
+            expect(result.query).toBe('what did they say');
+            expect(result.allowSummarizer).toBe(true);
+            expect(result.amount).toBe(100);
+            expect(result.model).toBe('google/gemini-2.5-flash-lite');
+        });
+    });
 });
