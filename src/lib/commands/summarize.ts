@@ -47,7 +47,9 @@ export const summarizeCommand: Command = {
   execute: async (context: CommandContext) => {
     const { message, botUserId, options } = context;
 
-    await message.channel.sendTyping();
+    if ("sendTyping" in message.channel) {
+      await message.channel.sendTyping();
+    }
 
     try {
       logger.info(
