@@ -28,13 +28,14 @@ export async function contextResolver(initMessage: Message, botUserId: string, o
                 continue;
             }
 
-            if (msg.author.id === authorId) {
+            // If amount is specified, stop when we reach the limit
+            if (options.amount !== undefined && messageCount >= options.amount) {
                 beforeId = undefined;
                 break;
             }
 
-            // If amount is specified, stop when we reach the limit
-            if (options.amount !== undefined && messageCount >= options.amount) {
+            // If amount is not specified, stop when we reach the author's previous message
+            if (options.amount === undefined && msg.author.id === authorId) {
                 beforeId = undefined;
                 break;
             }
