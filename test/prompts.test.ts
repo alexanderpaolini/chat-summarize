@@ -3,7 +3,7 @@ import {
   getSystemPrompt,
   formatUserContent,
   QUERY_SYSTEM_PROMPT,
-  SUMMARY_SYSTEM_PROMPT,
+  TLDR_SYSTEM_PROMPT,
 } from "../src/lib/prompts";
 
 describe("prompts", () => {
@@ -15,22 +15,22 @@ describe("prompts", () => {
 
     it("should return summary prompt when no query is provided", () => {
       const result = getSystemPrompt();
-      expect(result).toBe(SUMMARY_SYSTEM_PROMPT);
+      expect(result).toBe(TLDR_SYSTEM_PROMPT);
     });
 
     it("should return summary prompt when query is undefined", () => {
       const result = getSystemPrompt(undefined);
-      expect(result).toBe(SUMMARY_SYSTEM_PROMPT);
+      expect(result).toBe(TLDR_SYSTEM_PROMPT);
     });
 
     it("should return summary prompt when query is an empty string", () => {
       const result = getSystemPrompt("");
-      expect(result).toBe(SUMMARY_SYSTEM_PROMPT);
+      expect(result).toBe(TLDR_SYSTEM_PROMPT);
     });
 
     it("should return summary prompt when query is whitespace only", () => {
       const result = getSystemPrompt("   ");
-      expect(result).toBe(SUMMARY_SYSTEM_PROMPT);
+      expect(result).toBe(TLDR_SYSTEM_PROMPT);
     });
   });
 
