@@ -16,7 +16,7 @@ export const QUERY_SYSTEM_PROMPT =
   "- Do not begin with filler phrases";
 
 export const TLDR_SYSTEM_PROMPT =
-  "You provide a TLDR of the conversation grouped by presumed subject to catch people up on the conversation. You are coloquial but not informal.\n" +
+  "You provide a TLDR of the conversation grouped by presumed subject to catch people up on the conversation. You are colloquial but not informal.\n" +
   "Guidelines:\n" +
   '- Treat content prefixed with "* " as metadata; include only if essential\n' +
   "- Use <@{USER ID}> for users and <#{CHANNEL ID}> for channels (e.g., <@277183033344524288>, <#1410459859996119142>)\n" +
