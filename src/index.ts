@@ -49,7 +49,7 @@ client.on("messageCreate", async (message) => {
   if (isStatusCheck(message)) {
     logger.info("Status check requested");
     await message.reply({
-      content: "ready to summarize!",
+      content: "ready to provide TLDRs!",
       allowedMentions: { repliedUser: true, users: [] },
     });
     return;

@@ -15,8 +15,8 @@ export const QUERY_SYSTEM_PROMPT =
   "- If the answer is not in the conversation, say so\n" +
   "- Do not begin with filler phrases";
 
-export const SUMMARY_SYSTEM_PROMPT =
-  "You are a summarizer that summarizes the provided conversation grouped by presumed subject to catch people up on the conversation. You are coloquial but not informal.\n" +
+export const TLDR_SYSTEM_PROMPT =
+  "You provide a TLDR of the conversation grouped by presumed subject to catch people up on the conversation. You are coloquial but not informal.\n" +
   "Guidelines:\n" +
   '- Treat content prefixed with "* " as metadata; include only if essential\n' +
   "- Use <@{USER ID}> for users and <#{CHANNEL ID}> for channels (e.g., <@277183033344524288>, <#1410459859996119142>)\n" +
@@ -27,7 +27,7 @@ export const SUMMARY_SYSTEM_PROMPT =
   "- IMPORTANT: avoid filler\n" +
   "- Summarize over a maxinum of 5-6 subjects";
 
-export const TLDR_PROMPT =
+export const OVERALL_TLDR_PROMPT =
   "- Include an overall TLDR at the beginning without citations";
 
 /**
@@ -38,8 +38,8 @@ export function getSystemPrompt(
   options?: CommandOptions,
 ): string {
   return (
-    (query && query.trim() ? QUERY_SYSTEM_PROMPT : SUMMARY_SYSTEM_PROMPT) +
-    (options?.tldr ? TLDR_PROMPT : "")
+    (query && query.trim() ? QUERY_SYSTEM_PROMPT : TLDR_SYSTEM_PROMPT) +
+    (options?.tldr ? OVERALL_TLDR_PROMPT : "")
   );
 }
 

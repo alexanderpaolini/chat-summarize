@@ -41,9 +41,9 @@ function splitIntoChunks(text: string, maxLength = MAX_LENGTH) {
 
 const DEFAULT_TTL = 60;
 
-export const summarizeCommand: Command = {
-  name: "summarize",
-  description: "Summarize the last N messages in the channel",
+export const tldrCommand: Command = {
+  name: "tldr",
+  description: "Generate a TLDR of the last N messages in the channel",
   execute: async (context: CommandContext) => {
     const { message, botUserId, options } = context;
 
@@ -53,7 +53,7 @@ export const summarizeCommand: Command = {
 
     try {
       logger.info(
-        `Summarizing #${(message.channel as GuildTextBasedChannel).name} - ${message.guild?.name}`,
+        `Generating TLDR for #${(message.channel as GuildTextBasedChannel).name} - ${message.guild?.name}`,
       );
 
       await message.react("👍");
@@ -100,8 +100,8 @@ export const summarizeCommand: Command = {
         );
       }
     } catch (err) {
-      await message.reply("FAILED TO SUMMARIZE!");
-      logger.error("Failed to summarize messages");
+      await message.reply("FAILED TO GENERATE TLDR!");
+      logger.error("Failed to generate TLDR");
       logger.error(err);
     }
   },

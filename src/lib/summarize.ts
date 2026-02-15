@@ -10,8 +10,8 @@ export async function summarize(
   options?: CommandOptions,
 ) {
   if (!content.trim()) {
-    logger.warn("No content to summarize");
-    return "NOTHING TO SUMMARIZE";
+    logger.warn("No content to generate TLDR from");
+    return "NOTHING TO GENERATE TLDR FROM";
   }
 
   const systemPrompt = getSystemPrompt(query, options);
@@ -36,7 +36,7 @@ export async function summarize(
     },
   });
 
-  const summary = String(res.choices[0].message.content ?? "SUMMARY FAILED!");
+  const summary = String(res.choices[0].message.content ?? "TLDR GENERATION FAILED!");
   logger.info(`LLM response received (${summary.length} characters)`);
 
   return summary;

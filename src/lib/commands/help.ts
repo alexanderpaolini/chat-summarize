@@ -8,25 +8,25 @@ export const helpCommand: Command = {
     const { message } = context;
 
     const helpText = `
-**chat, summarize**
+**chat, tldr**
 
 **Usage:**
 \`chat [command] [options]\` or \`@bot [command] [options]\`
 
 **Commands:**
-• \`summarize\` - Summarize messages in the channel (default command)
+• \`tldr\` - Generate a TLDR of messages in the channel (default command)
 • \`help\` - Show this help message
 
 **Options:**
 • \`--help\` - Show this help message
-• \`--allow-summarizer\` or \`-S\` - Include bot messages in summaries
-• \`--amount <number>\` or \`-N <number>\` - Specify number of messages to summarize
-• \`--model <model>\` or \`-M <model>\` - Choose AI model for summarization
+• \`--allow-summarizer\` or \`-S\` - Include bot messages in TLDRs
+• \`--amount <number>\` or \`-N <number>\` - Specify number of messages to include
+• \`--model <model>\` or \`-M <model>\` - Choose AI model
   Available models: ${ALLOWED_MODELS.join(", ")}
 
 **Examples:**
-\`chat summarize\` - Summarize messages from your previous message to now
-\`@bot summarize -S --amount 100\` - Summarize last 100 messages including bot messages
+\`chat tldr\` - Generate TLDR from your previous message to now
+\`@bot tldr -S --amount 100\` - Generate TLDR of last 100 messages including bot messages
 \`chat what did Sarah say?\` - Ask a specific question about the conversation
 \`@bot --help\` - Show this help message
 `.trim();
