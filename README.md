@@ -1,8 +1,8 @@
-# Chat, tldr
+# Chat, summarize
 
-`Chat, tldr` is a discord bot that generates a TLDR of the last `N` messages, such that your last message in that channel was message `N + 1`.
+`Chat, summarize` is a discord bot that summarizes the last `N` messages, such that your last message in that channel was message `N + 1`.
 
-Tired of scrolling up in your channels and reading hundreds of messages? `Chat, tldr` has you covered.
+Tired of scrolling up in your channels and reading hundreds of messages? `Chat, summarize` has you covered.
 
 ## Usage
 
@@ -10,11 +10,11 @@ The bot uses Unix-like command syntax: `[chat | @bot] [command] [--options]`
 
 ### Basic Commands
 
-- **TLDR** (default command)
+- **Summarize** (default command)
   ```
-  chat tldr
+  chat summarize
   chat
-  @bot tldr
+  @bot summarize
   @bot
   ```
 
@@ -33,12 +33,12 @@ You can ask specific questions about the conversation:
 ```
 chat what did James say about going to Fuji on Thursday?
 @bot who mentioned the meeting?
-chat tldr what did Sarah say about the project?
+chat summarize what did Sarah say about the project?
 ```
 
 ### Command Options
 
-You can customize the behavior with the following options:
+You can customize the summarization behavior with the following options:
 
 - `--help` or `-h`  
   Show available commands and options.
@@ -46,25 +46,25 @@ You can customize the behavior with the following options:
   Example: `chat --help`
 
 - `--allow-summarizer` or `-S`  
-  By default, bot messages are filtered out to prevent recursive generation. Use this option to include bot messages in the TLDR.
+  By default, bot messages are filtered out to prevent recursive summarization. Use this option to include bot messages in the summary.
   
-  Example: `chat tldr -S`
+  Example: `chat summarize -S`
 
 - `--amount <number>` or `-N <number>`  
-  Specify the exact number of messages to include instead of fetching all messages until your last message.
+  Specify the exact number of messages to summarize instead of fetching all messages until your last message.
   
-  Example: `chat tldr --amount 100`
+  Example: `chat summarize --amount 100`
 
 - `--model <model-name>` or `-M <model-name>`  
-  Specify which AI model to use. Available models:
+  Specify which AI model to use for summarization. Available models:
   - `google/gemini-2.5-flash-lite` (default)
   
-  Example: `chat tldr --model google/gemini-2.5-flash-lite`
+  Example: `chat summarize --model google/gemini-2.5-flash-lite`
 
 You can combine multiple options:
 
 ```
-chat tldr -S --amount 50 --model google/gemini-2.5-flash-lite
+chat summarize -S --amount 50 --model google/gemini-2.5-flash-lite
 ```
 
 You can also use flags with queries:

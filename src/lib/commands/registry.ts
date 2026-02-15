@@ -1,5 +1,5 @@
 import { Command } from "./types";
-import { tldrCommand } from "./summarize";
+import { summarizeCommand } from "./summarize";
 import { helpCommand } from "./help";
 
 class CommandRegistry {
@@ -26,5 +26,5 @@ class CommandRegistry {
 export const commandRegistry = new CommandRegistry();
 
 // Register built-in commands
-commandRegistry.register(tldrCommand);
+commandRegistry.register(summarizeCommand);
 commandRegistry.register(helpCommand);

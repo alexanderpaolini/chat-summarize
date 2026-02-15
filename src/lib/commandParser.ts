@@ -63,15 +63,14 @@ export function parseCommand(content: string): ParsedCommand {
     (arg) => typeof arg === "string" && arg.trim(),
   );
   
-  let command = "tldr"; // default command
+  let command = "summarize"; // default command
   let queryParts = nonFlagArgs;
   
   // Check if first argument is a known command
   if (nonFlagArgs.length > 0) {
     const firstArg = nonFlagArgs[0].toLowerCase();
-    if (firstArg === "tldr" || firstArg === "summarize" || firstArg === "help") {
-      // Map "summarize" to "tldr" for backward compatibility
-      command = firstArg === "summarize" ? "tldr" : firstArg;
+    if (firstArg === "summarize" || firstArg === "help") {
+      command = firstArg;
       queryParts = nonFlagArgs.slice(1); // Remove command from query parts
     }
   }
@@ -111,7 +110,7 @@ export function parseCommand(content: string): ParsedCommand {
 
 /**
  * Parses command-line style arguments from a Discord message
- * @param content The message content (e.g., "chat tldr --amount 100 -S")
+ * @param content The message content (e.g., "chat summarize --amount 100 -S")
  * @returns Parsed command options
  * @deprecated Use parseCommand instead for new code. This function is maintained for backward compatibility with existing tests.
  */

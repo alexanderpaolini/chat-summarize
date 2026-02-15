@@ -65,7 +65,7 @@ export async function contextResolver(
 
   collected.sort((a, b) => a.createdTimestamp - b.createdTimestamp);
 
-  logger.info(`Collected ${collected.length} messages for TLDR generation`);
+  logger.info(`Collected ${collected.length} messages for summarization`);
 
   const res = collected
     .map((m) => {
