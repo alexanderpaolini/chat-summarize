@@ -69,8 +69,9 @@ export function parseCommand(content: string): ParsedCommand {
   // Check if first argument is a known command
   if (nonFlagArgs.length > 0) {
     const firstArg = nonFlagArgs[0].toLowerCase();
-    if (firstArg === "tldr" || firstArg === "help") {
-      command = firstArg;
+    if (firstArg === "tldr" || firstArg === "summarize" || firstArg === "help") {
+      // Map "summarize" to "tldr" for backward compatibility
+      command = firstArg === "summarize" ? "tldr" : firstArg;
       queryParts = nonFlagArgs.slice(1); // Remove command from query parts
     }
   }
