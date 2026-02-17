@@ -15,6 +15,7 @@ export const helpCommand: Command = {
 
 **Commands:**
 • \`summarize\` - Summarize messages in the channel (default command)
+• \`run <instruction>\` - Generate and execute code based on natural language
 • \`help\` - Show this help message
 
 **Options:**
@@ -28,6 +29,8 @@ export const helpCommand: Command = {
 \`chat summarize\` - Summarize messages from your previous message to now
 \`@bot summarize -S --amount 100\` - Summarize last 100 messages including bot messages
 \`chat what did Sarah say?\` - Ask a specific question about the conversation
+\`chat run remind me in 10 seconds to do something\` - Generate and run code
+\`@bot run ping 1.1.1.1\` - Execute a ping command
 \`@bot --help\` - Show this help message
 `.trim();
 

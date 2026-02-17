@@ -60,8 +60,8 @@ export function parseCommand(content: string): ParsedCommand {
 
   // Extract command name from the first non-flag argument
   const nonFlagArgs = argv._.filter(
-    (arg) => typeof arg === "string" && arg.trim(),
-  );
+    (arg) => (typeof arg === "string" || typeof arg === "number") && String(arg).trim().length > 0,
+  ).map(arg => String(arg));
   
   let command = "summarize"; // default command
   let queryParts = nonFlagArgs;
@@ -69,7 +69,7 @@ export function parseCommand(content: string): ParsedCommand {
   // Check if first argument is a known command
   if (nonFlagArgs.length > 0) {
     const firstArg = nonFlagArgs[0].toLowerCase();
-    if (firstArg === "summarize" || firstArg === "help") {
+    if (firstArg === "summarize" || firstArg === "help" || firstArg === "run") {
       command = firstArg;
       queryParts = nonFlagArgs.slice(1); // Remove command from query parts
     }

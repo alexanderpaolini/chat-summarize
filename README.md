@@ -18,6 +18,12 @@ The bot uses Unix-like command syntax: `[chat | @bot] [command] [--options]`
   @bot
   ```
 
+- **Run** - Generate and execute code based on natural language
+  ```
+  chat run <instruction>
+  @bot run <instruction>
+  ```
+
 - **Help** - Show available commands and options
   ```
   chat help
@@ -35,6 +41,26 @@ chat what did James say about going to Fuji on Thursday?
 @bot who mentioned the meeting?
 chat summarize what did Sarah say about the project?
 ```
+
+### Run Command Examples
+
+The `run` command uses AI to generate and execute code based on your natural language instructions:
+
+```
+chat run remind me in 10 seconds to do something
+chat run get the current time
+chat run send a message saying hello
+@bot run get the server name
+```
+
+**⚠️ SECURITY WARNING:** 
+- The `run` command executes AI-generated JavaScript code with access to the Discord bot's permissions
+- This feature should ONLY be enabled for trusted administrators
+- While the command restricts access to file system and shell commands, it can still perform actions on Discord (send messages, modify channels, etc.) based on the bot's permissions
+- The AI model may misinterpret instructions or generate unexpected code
+- Consider implementing additional access controls before using this command in production
+- Be aware of potential prompt injection attacks where malicious users try to manipulate the AI
+- Use this feature at your own risk and in controlled environments only
 
 ### Command Options
 
