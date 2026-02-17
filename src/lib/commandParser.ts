@@ -60,7 +60,7 @@ export function parseCommand(content: string): ParsedCommand {
 
   // Extract command name from the first non-flag argument
   const nonFlagArgs = argv._.filter(
-    (arg) => (typeof arg === "string" || typeof arg === "number") && String(arg).trim(),
+    (arg) => (typeof arg === "string" || typeof arg === "number") && String(arg).trim().length > 0,
   ).map(arg => String(arg));
   
   let command = "summarize"; // default command

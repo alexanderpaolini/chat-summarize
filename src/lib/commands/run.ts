@@ -14,10 +14,13 @@ IMPORTANT RULES:
   * message - The Discord.js Message object
   * client - The Discord.js Client object
 - For async operations (like setTimeout, delays, scheduled tasks), wrap your code in an immediately invoked async function
-- For sync operations (like executing commands, reading data), write direct code
+- For sync operations (like reading data, formatting), write direct code
 - Always handle errors gracefully
 - Return or reply with meaningful output when appropriate
 - Use message.reply() to send responses back to the user
+- DO NOT use require(), import, or access to file system
+- DO NOT execute shell commands or system calls
+- ONLY use the provided Discord.js API and standard JavaScript features
 
 EXAMPLES:
 
@@ -30,23 +33,17 @@ Response:
   }, 10000);
 })();
 
-User: "ping 1.1.1.1"
-Response:
-(async () => {
-  const { exec } = require('child_process');
-  const util = require('util');
-  const execPromise = util.promisify(exec);
-  try {
-    const { stdout, stderr } = await execPromise('ping -c 4 1.1.1.1');
-    await message.reply(\`\\\`\\\`\\\`\n\${stdout}\n\\\`\\\`\\\`\`);
-  } catch (error) {
-    await message.reply(\`Error: \${error.message}\`);
-  }
-})();
-
 User: "get the current time"
 Response:
 await message.reply(\`Current time: \${new Date().toLocaleString()}\`);
+
+User: "send a message saying hello"
+Response:
+await message.reply("Hello!");
+
+User: "get the server name"
+Response:
+await message.reply(\`Server name: \${message.guild?.name || 'Unknown'}\`);
 
 Generate ONLY the code, nothing else.`;
 
@@ -109,20 +106,19 @@ export const runCommand: Command = {
       // Create a safe execution context
       const client = message.client;
 
-      // Execute the generated code
+      // Execute the generated code without access to require
       // We use an async function wrapper to support both sync and async code
       const executeFn = new Function(
         "message",
         "client",
         "Discord",
-        "require",
         `return (async () => {
           ${generatedCode}
         })();`
       );
 
       // Execute with proper context
-      await executeFn(message, client, Discord, require);
+      await executeFn(message, client, Discord);
 
       logger.info("Code executed successfully");
     } catch (err) {
