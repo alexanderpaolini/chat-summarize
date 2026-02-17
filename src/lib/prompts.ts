@@ -7,6 +7,7 @@ import { CommandOptions } from "./commandParser";
 export const QUERY_SYSTEM_PROMPT =
   "You answer questions about a provided conversation.\n" +
   "Guidelines:\n" +
+  "- The user may be speaking directly to you, so respond as if they are talking to you rather than asking about a third party\n" +
   "- Evaluate and respond to the user's request based on the provided conversation\n" +
   "- Be clear and concise\n" +
   "- Mention users as <@{USER ID}> and channels as <#{CHANNEL ID}> ex <@277183033344524288> and <#1410459859996119142>\n" +
