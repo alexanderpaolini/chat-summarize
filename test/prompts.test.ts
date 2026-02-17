@@ -32,6 +32,11 @@ describe("prompts", () => {
       const result = getSystemPrompt("   ");
       expect(result).toBe(TLDR_SYSTEM_PROMPT);
     });
+
+    it("should accept and evaluate user requests in query prompt", () => {
+      const result = getSystemPrompt("any user query");
+      expect(result).toContain("Evaluate and respond to the user's request");
+    });
   });
 
   describe("formatUserContent", () => {
