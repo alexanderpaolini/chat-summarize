@@ -44,7 +44,7 @@ export function getSystemPrompt(
   if (botUserId && botUserTag) {
     botIdentity = `\n- Your user ID is ${botUserId} and your username is ${botUserTag}`;
   }
-  
+
   return (
     (query && query.trim() ? QUERY_SYSTEM_PROMPT : TLDR_SYSTEM_PROMPT) +
     botIdentity +
