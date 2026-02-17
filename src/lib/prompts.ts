@@ -37,9 +37,17 @@ export const OVERALL_TLDR_PROMPT =
 export function getSystemPrompt(
   query?: string,
   options?: CommandOptions,
+  botUserId?: string,
+  botUserTag?: string,
 ): string {
+  let botIdentity = "";
+  if (botUserId && botUserTag) {
+    botIdentity = `\n- Your user ID is ${botUserId} and your username is ${botUserTag}`;
+  }
+  
   return (
     (query && query.trim() ? QUERY_SYSTEM_PROMPT : TLDR_SYSTEM_PROMPT) +
+    botIdentity +
     (options?.tldr ? OVERALL_TLDR_PROMPT : "")
   );
 }

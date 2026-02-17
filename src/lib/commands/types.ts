@@ -4,6 +4,7 @@ import { CommandOptions } from "../commandParser";
 export interface CommandContext {
   message: Message;
   botUserId: string;
+  botUserTag: string;
   options: CommandOptions;
 }
 
