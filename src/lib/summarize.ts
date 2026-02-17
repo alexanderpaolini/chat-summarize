@@ -8,13 +8,15 @@ export async function summarize(
   content: string,
   query?: string,
   options?: CommandOptions,
+  botUserId?: string,
+  botUserTag?: string,
 ) {
   if (!content.trim()) {
     logger.warn("No content to summarize");
     return "NOTHING TO SUMMARIZE";
   }
 
-  const systemPrompt = getSystemPrompt(query, options);
+  const systemPrompt = getSystemPrompt(query, options, botUserId, botUserTag);
   const userContent = formatUserContent(content, query);
 
   const model = options?.model || DEFAULT_LLM_MODEL;

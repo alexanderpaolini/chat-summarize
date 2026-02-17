@@ -45,7 +45,7 @@ export const summarizeCommand: Command = {
   name: "summarize",
   description: "Summarize the last N messages in the channel",
   execute: async (context: CommandContext) => {
-    const { message, botUserId, options } = context;
+    const { message, botUserId, botUserTag, options } = context;
 
     if ("sendTyping" in message.channel) {
       await message.channel.sendTyping();
@@ -59,7 +59,7 @@ export const summarizeCommand: Command = {
       await message.react("👍");
 
       const content = await contextResolver(message, botUserId, options);
-      const summary = await summarize(content, options.query, options);
+      const summary = await summarize(content, options.query, options, botUserId, botUserTag);
 
       let replyMsg = message;
       const chunks = splitIntoChunks(summary);

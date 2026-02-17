@@ -75,6 +75,7 @@ client.on("messageCreate", async (message) => {
     await command.execute({
       message,
       botUserId: client.user!.id,
+      botUserTag: client.user!.tag,
       options: parsed.options,
     });
   } catch (err) {
