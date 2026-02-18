@@ -33,9 +33,9 @@ describe('prompts', () => {
       expect(result).toBe(TLDR_SYSTEM_PROMPT);
     });
 
-    it('should accept and evaluate user requests in query prompt', () => {
+    it('should answer questions in query prompt', () => {
       const result = getSystemPrompt('any user query');
-      expect(result).toContain("Evaluate and respond to the user's request");
+      expect(result).toContain('Answer questions about the conversation');
     });
   });
 

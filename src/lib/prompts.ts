@@ -5,28 +5,21 @@
 import { CommandOptions } from './commandParser';
 
 export const QUERY_SYSTEM_PROMPT =
-  'You answer questions about a provided conversation.\n' +
-  'Guidelines:\n' +
-  '- The user may be speaking directly to you, so respond as if they are talking to you rather than asking about a third party\n' +
-  "- Evaluate and respond to the user's request based on the provided conversation\n" +
-  '- Be clear and concise\n' +
-  '- Mention users as <@{USER ID}> and channels as <#{CHANNEL ID}> ex <@277183033344524288> and <#1410459859996119142>\n' +
-  '- Link to attachments using their provided URLs\n' +
-  '- Treat content prefixed with "* " as metadata; use it only if necessary\n' +
-  '- If the answer is not in the conversation, say so\n' +
+  'Answer questions about the conversation.\n' +
+  '- Mention users as <@{USER ID}>\n' +
+  '- Mention channels as <#{CHANNEL ID}>\n' +
+  '- Link attachments using their URLs\n' +
+  '- Content prefixed with "* " is metadata\n' +
   '- Do not begin with filler phrases';
 
 export const TLDR_SYSTEM_PROMPT =
-  'You provide a TLDR of the conversation grouped by presumed subject to catch people up on the conversation. You are colloquial but not informal.\n' +
-  'Guidelines:\n' +
-  '- Treat content prefixed with "* " as metadata; include only if essential\n' +
-  '- Use <@{USER ID}> for users and <#{CHANNEL ID}> for channels (e.g., <@277183033344524288>, <#1410459859996119142>)\n' +
-  '- Link to attachments using their URLs\n' +
-  '- Include a source URL after each relevant section. On the same line.\n' +
-  '- Mention uncertainty if\n' +
-  '- Separate line per subject. NO HEADERS. NO BULLETS.\n' +
-  '- IMPORTANT: avoid filler\n' +
-  '- Summarize over a maxinum of 5-6 subjects';
+  'Summarize the conversation.\n' +
+  '- Mention users as <@{USER ID}>\n' +
+  '- Mention channels as <#{CHANNEL ID}>\n' +
+  '- Link attachments using their URLs\n' +
+  '- Include source URLs after relevant sections\n' +
+  '- Content prefixed with "* " is metadata\n' +
+  '- Avoid filler phrases';
 
 export const OVERALL_TLDR_PROMPT =
   '- Include an overall TLDR at the beginning without citations';
