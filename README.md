@@ -100,6 +100,65 @@ You can also use flags with queries:
 chat what happened -S --amount 100
 ```
 
+## Docker Deployment
+
+This bot can be run in a lightweight Docker container for easy deployment.
+
+### Prerequisites
+
+- Docker and Docker Compose installed on your system
+- A `.env` file with your API keys (copy from `.env.example`)
+
+### Quick Start with Docker
+
+1. **Copy the environment file:**
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **Edit `.env` and add your API keys:**
+   ```bash
+   OPENROUTER_API_KEY="your-openrouter-api-key"
+   DISCORD_TOKEN="your-discord-bot-token"
+   ```
+
+3. **Start the bot using Docker Compose:**
+   ```bash
+   pnpm run docker:start
+   ```
+
+### Docker Commands
+
+The following npm scripts are available for managing the Docker container:
+
+- `pnpm run docker:start` - Build and start the container in detached mode
+- `pnpm run docker:stop` - Stop and remove the container
+- `pnpm run docker:logs` - View container logs in real-time
+- `pnpm run docker:build` - Build the Docker image
+
+Alternatively, you can use Docker Compose commands directly:
+
+```bash
+# Build and start
+docker compose up -d
+
+# Stop
+docker compose down
+
+# View logs
+docker compose logs -f
+
+# Rebuild
+docker compose build
+```
+
+### Docker Container Details
+
+- Based on lightweight `node:20-alpine` image
+- Automatically installs dependencies using pnpm
+- Configured to restart automatically unless stopped manually
+- Uses environment variables from `.env` file
+
 ## Development
 
 ### Testing

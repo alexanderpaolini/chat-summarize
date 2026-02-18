@@ -1,0 +1,13 @@
+services:
+  chat-summarize:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chat-summarize-bot
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: true
+    volumes:
+      # Mount source code for development (optional, can be removed for production)
+      - ./src:/app/src:ro
