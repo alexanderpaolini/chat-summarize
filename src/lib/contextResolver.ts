@@ -65,6 +65,9 @@ export async function contextResolver(
     lastNonBotMessageId = undefined; // Reset for next batch
   }
 
+  // Add the initial message to the collected messages
+  collected.push(initMessage);
+
   collected.sort((a, b) => a.createdTimestamp - b.createdTimestamp);
 
   logger.info(`Collected ${collected.length} messages for summarization`);
@@ -144,6 +147,7 @@ export async function contextResolver(
         s += `* has thread`;
       }
 
+      s += '\n';
       s += '* url: ' + m.url;
 
       return s;
