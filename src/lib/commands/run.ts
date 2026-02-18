@@ -51,6 +51,7 @@ export const runCommand: Command = {
   name: 'run',
   description:
     'Generate and execute code based on natural language instructions',
+  requiresPermission: true, // Only allowed users can execute this command
   execute: async (context: CommandContext) => {
     const { message, options } = context;
 
