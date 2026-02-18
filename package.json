@@ -2,6 +2,7 @@
   "name": "chat-summarize",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "vitest run",
@@ -9,6 +10,12 @@
     "test:ui": "vitest --ui",
     "start": "pnpm with-env tsx src/index.ts",
     "with-env": "dotenv -e .env --",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
+    "type-check": "tsc --noEmit",
+    "build": "tsc",
     "docker:start": "docker compose up -d",
     "docker:stop": "docker compose down",
     "docker:logs": "docker compose logs -f",
@@ -28,11 +35,19 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/node": "^25.2.3",
+    "@typescript-eslint/eslint-plugin": "^8.56.0",
+    "@typescript-eslint/parser": "^8.56.0",
     "@vitest/ui": "^4.0.18",
     "dotenv-cli": "^11.0.0",
+    "eslint": "^10.0.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "prettier": "^3.8.1",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.0",
     "vitest": "^4.0.18",
     "with-env": "^1.1.1"
   }

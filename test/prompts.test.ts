@@ -1,70 +1,70 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from 'vitest';
 import {
   getSystemPrompt,
   formatUserContent,
   QUERY_SYSTEM_PROMPT,
   TLDR_SYSTEM_PROMPT,
-} from "../src/lib/prompts";
+} from '../src/lib/prompts';
 
-describe("prompts", () => {
-  describe("getSystemPrompt", () => {
-    it("should return query prompt when query is provided", () => {
-      const result = getSystemPrompt("what did they say?");
+describe('prompts', () => {
+  describe('getSystemPrompt', () => {
+    it('should return query prompt when query is provided', () => {
+      const result = getSystemPrompt('what did they say?');
       expect(result).toBe(QUERY_SYSTEM_PROMPT);
     });
 
-    it("should return summary prompt when no query is provided", () => {
+    it('should return summary prompt when no query is provided', () => {
       const result = getSystemPrompt();
       expect(result).toBe(TLDR_SYSTEM_PROMPT);
     });
 
-    it("should return summary prompt when query is undefined", () => {
+    it('should return summary prompt when query is undefined', () => {
       const result = getSystemPrompt(undefined);
       expect(result).toBe(TLDR_SYSTEM_PROMPT);
     });
 
-    it("should return summary prompt when query is an empty string", () => {
-      const result = getSystemPrompt("");
+    it('should return summary prompt when query is an empty string', () => {
+      const result = getSystemPrompt('');
       expect(result).toBe(TLDR_SYSTEM_PROMPT);
     });
 
-    it("should return summary prompt when query is whitespace only", () => {
-      const result = getSystemPrompt("   ");
+    it('should return summary prompt when query is whitespace only', () => {
+      const result = getSystemPrompt('   ');
       expect(result).toBe(TLDR_SYSTEM_PROMPT);
     });
 
-    it("should accept and evaluate user requests in query prompt", () => {
-      const result = getSystemPrompt("any user query");
+    it('should accept and evaluate user requests in query prompt', () => {
+      const result = getSystemPrompt('any user query');
       expect(result).toContain("Evaluate and respond to the user's request");
     });
   });
 
-  describe("formatUserContent", () => {
-    const content = "User1: Hello\nUser2: Hi there";
+  describe('formatUserContent', () => {
+    const content = 'User1: Hello\nUser2: Hi there';
 
-    it("should format content with query", () => {
-      const query = "what did User1 say?";
+    it('should format content with query', () => {
+      const query = 'what did User1 say?';
       const result = formatUserContent(content, query);
       expect(result).toBe(`Question: ${query}\n\nConversation:\n${content}`);
     });
 
-    it("should return content as-is when no query is provided", () => {
+    it('should return content as-is when no query is provided', () => {
       const result = formatUserContent(content);
       expect(result).toBe(content);
     });
 
-    it("should return content as-is when query is undefined", () => {
+    it('should return content as-is when query is undefined', () => {
       const result = formatUserContent(content, undefined);
       expect(result).toBe(content);
     });
 
-    it("should return content as-is when query is an empty string", () => {
-      const result = formatUserContent(content, "");
+    it('should return content as-is when query is an empty string', () => {
+      const result = formatUserContent(content, '');
       expect(result).toBe(content);
     });
 
-    it("should return content as-is when query is whitespace only", () => {
-      const result = formatUserContent(content, "   ");
+    it('should return content as-is when query is whitespace only', () => {
+      const result = formatUserContent(content, '   ');
       expect(result).toBe(content);
     });
   });

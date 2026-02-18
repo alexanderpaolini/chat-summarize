@@ -1,5 +1,5 @@
-import { Message } from "discord.js";
-import { CommandOptions } from "../commandParser";
+import { Message } from 'discord.js';
+import { CommandOptions } from '../commandParser';
 
 export interface CommandContext {
   message: Message;

@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from "vitest";
-import { contextResolver } from "../src/lib/contextResolver";
+import { describe, it, expect, vi } from 'vitest';
+import { contextResolver } from '../src/lib/contextResolver';
 import {
   Message,
   Collection,
@@ -9,12 +9,11 @@ import {
   Embed,
   MessageReference,
   Role,
-  GuildChannel,
-} from "discord.js";
+} from 'discord.js';
 
-describe("contextResolver", () => {
-  describe("context formatting", () => {
-    it("should include basic message information", async () => {
+describe('contextResolver', () => {
+  describe('context formatting', () => {
+    it('should include basic message information', async () => {
       const mockChannel = {
         messages: {
           fetch: vi.fn().mockResolvedValue(new Collection()),
@@ -22,14 +21,14 @@ describe("contextResolver", () => {
       };
 
       const mockAuthor = {
-        id: "123456789",
-        tag: "TestUser#1234",
+        id: '123456789',
+        tag: 'TestUser#1234',
       } as User;
 
       const mockMessage = {
-        id: "999",
+        id: '999',
         author: mockAuthor,
-        content: "Hello world",
+        content: 'Hello world',
         channel: mockChannel,
         createdTimestamp: 1234567890000,
         editedTimestamp: null,
@@ -45,13 +44,13 @@ describe("contextResolver", () => {
         hasThread: false,
       } as unknown as Message;
 
-      const result = await contextResolver(mockMessage, "bot123");
+      const result = await contextResolver(mockMessage, 'bot123');
 
-      expect(result).toContain("TestUser#1234 (123456789)");
-      expect(result).toContain("Hello world");
+      expect(result).toContain('TestUser#1234 (123456789)');
+      expect(result).toContain('Hello world');
     });
 
-    it("should include role mentions when present", async () => {
+    it('should include role mentions when present', async () => {
       const mockChannel = {
         messages: {
           fetch: vi.fn().mockResolvedValue(new Collection()),
@@ -59,22 +58,22 @@ describe("contextResolver", () => {
       };
 
       const mockRole = {
-        id: "456789",
-        name: "Moderator",
+        id: '456789',
+        name: 'Moderator',
       } as Role;
 
       const mockRoles = new Collection<string, Role>();
-      mockRoles.set("456789", mockRole);
+      mockRoles.set('456789', mockRole);
 
       const mockAuthor = {
-        id: "123456789",
-        tag: "TestUser#1234",
+        id: '123456789',
+        tag: 'TestUser#1234',
       } as User;
 
       const mockMessage = {
-        id: "999",
+        id: '999',
         author: mockAuthor,
-        content: "Hello @Moderator",
+        content: 'Hello @Moderator',
         channel: mockChannel,
         createdTimestamp: 1234567890000,
         editedTimestamp: null,
@@ -90,12 +89,12 @@ describe("contextResolver", () => {
         hasThread: false,
       } as unknown as Message;
 
-      const result = await contextResolver(mockMessage, "bot123");
+      const result = await contextResolver(mockMessage, 'bot123');
 
-      expect(result).toContain("* mentions (roles): Moderator (456789)");
+      expect(result).toContain('* mentions (roles): Moderator (456789)');
     });
 
-    it("should include attachments when present", async () => {
+    it('should include attachments when present', async () => {
       const mockChannel = {
         messages: {
           fetch: vi.fn().mockResolvedValue(new Collection()),
@@ -103,23 +102,23 @@ describe("contextResolver", () => {
       };
 
       const mockAttachment = {
-        name: "image.png",
-        contentType: "image/png",
-        url: "https://cdn.discordapp.com/attachments/123/456/image.png",
+        name: 'image.png',
+        contentType: 'image/png',
+        url: 'https://cdn.discordapp.com/attachments/123/456/image.png',
       } as Attachment;
 
       const mockAttachments = new Collection<string, Attachment>();
-      mockAttachments.set("att1", mockAttachment);
+      mockAttachments.set('att1', mockAttachment);
 
       const mockAuthor = {
-        id: "123456789",
-        tag: "TestUser#1234",
+        id: '123456789',
+        tag: 'TestUser#1234',
       } as User;
 
       const mockMessage = {
-        id: "999",
+        id: '999',
         author: mockAuthor,
-        content: "Check this out",
+        content: 'Check this out',
         channel: mockChannel,
         createdTimestamp: 1234567890000,
         editedTimestamp: null,
@@ -135,14 +134,14 @@ describe("contextResolver", () => {
         hasThread: false,
       } as unknown as Message;
 
-      const result = await contextResolver(mockMessage, "bot123");
+      const result = await contextResolver(mockMessage, 'bot123');
 
       expect(result).toContain(
-        "* attachments: image.png (image/png) - https://cdn.discordapp.com/attachments/123/456/image.png",
+        '* attachments: image.png (image/png) - https://cdn.discordapp.com/attachments/123/456/image.png'
       );
     });
 
-    it("should handle attachments without name or contentType", async () => {
+    it('should handle attachments without name or contentType', async () => {
       const mockChannel = {
         messages: {
           fetch: vi.fn().mockResolvedValue(new Collection()),
@@ -152,21 +151,21 @@ describe("contextResolver", () => {
       const mockAttachment = {
         name: null,
         contentType: null,
-        url: "https://cdn.discordapp.com/attachments/123/456/unknown.bin",
+        url: 'https://cdn.discordapp.com/attachments/123/456/unknown.bin',
       } as unknown as Attachment;
 
       const mockAttachments = new Collection<string, Attachment>();
-      mockAttachments.set("att1", mockAttachment);
+      mockAttachments.set('att1', mockAttachment);
 
       const mockAuthor = {
-        id: "123456789",
-        tag: "TestUser#1234",
+        id: '123456789',
+        tag: 'TestUser#1234',
       } as User;
 
       const mockMessage = {
-        id: "999",
+        id: '999',
         author: mockAuthor,
-        content: "Check this out",
+        content: 'Check this out',
         channel: mockChannel,
         createdTimestamp: 1234567890000,
         editedTimestamp: null,
@@ -182,14 +181,14 @@ describe("contextResolver", () => {
         hasThread: false,
       } as unknown as Message;
 
-      const result = await contextResolver(mockMessage, "bot123");
+      const result = await contextResolver(mockMessage, 'bot123');
 
       expect(result).toContain(
-        "* attachments: file (unknown type) - https://cdn.discordapp.com/attachments/123/456/unknown.bin",
+        '* attachments: file (unknown type) - https://cdn.discordapp.com/attachments/123/456/unknown.bin'
       );
     });
 
-    it("should include embeds when present", async () => {
+    it('should include embeds when present', async () => {
       const mockChannel = {
         messages: {
           fetch: vi.fn().mockResolvedValue(new Collection()),
@@ -197,19 +196,19 @@ describe("contextResolver", () => {
       };
 
       const mockEmbed = {
-        title: "Important Link",
-        description: "This is a description",
+        title: 'Important Link',
+        description: 'This is a description',
       } as Embed;
 
       const mockAuthor = {
-        id: "123456789",
-        tag: "TestUser#1234",
+        id: '123456789',
+        tag: 'TestUser#1234',
       } as User;
 
       const mockMessage = {
-        id: "999",
+        id: '999',
         author: mockAuthor,
-        content: "Check this link",
+        content: 'Check this link',
         channel: mockChannel,
         createdTimestamp: 1234567890000,
         editedTimestamp: null,
@@ -225,14 +224,14 @@ describe("contextResolver", () => {
         hasThread: false,
       } as unknown as Message;
 
-      const result = await contextResolver(mockMessage, "bot123");
+      const result = await contextResolver(mockMessage, 'bot123');
 
-      expect(result).toContain("* embeds: 1 embed");
-      expect(result).toContain("[1] Important Link");
-      expect(result).toContain("This is a description");
+      expect(result).toContain('* embeds: 1 embed');
+      expect(result).toContain('[1] Important Link');
+      expect(result).toContain('This is a description');
     });
 
-    it("should use correct plural form for multiple embeds", async () => {
+    it('should use correct plural form for multiple embeds', async () => {
       const mockChannel = {
         messages: {
           fetch: vi.fn().mockResolvedValue(new Collection()),
@@ -240,24 +239,24 @@ describe("contextResolver", () => {
       };
 
       const mockEmbed1 = {
-        title: "First Link",
-        description: "First description",
+        title: 'First Link',
+        description: 'First description',
       } as Embed;
 
       const mockEmbed2 = {
-        title: "Second Link",
-        description: "Second description",
+        title: 'Second Link',
+        description: 'Second description',
       } as Embed;
 
       const mockAuthor = {
-        id: "123456789",
-        tag: "TestUser#1234",
+        id: '123456789',
+        tag: 'TestUser#1234',
       } as User;
 
       const mockMessage = {
-        id: "999",
+        id: '999',
         author: mockAuthor,
-        content: "Check these links",
+        content: 'Check these links',
         channel: mockChannel,
         createdTimestamp: 1234567890000,
         editedTimestamp: null,
@@ -273,14 +272,14 @@ describe("contextResolver", () => {
         hasThread: false,
       } as unknown as Message;
 
-      const result = await contextResolver(mockMessage, "bot123");
+      const result = await contextResolver(mockMessage, 'bot123');
 
-      expect(result).toContain("* embeds: 2 embeds");
-      expect(result).toContain("[1] First Link");
-      expect(result).toContain("[2] Second Link");
+      expect(result).toContain('* embeds: 2 embeds');
+      expect(result).toContain('[1] First Link');
+      expect(result).toContain('[2] Second Link');
     });
 
-    it("should include reactions when present", async () => {
+    it('should include reactions when present', async () => {
       const mockChannel = {
         messages: {
           fetch: vi.fn().mockResolvedValue(new Collection()),
@@ -288,22 +287,22 @@ describe("contextResolver", () => {
       };
 
       const mockReaction = {
-        emoji: { name: "👍" },
+        emoji: { name: '👍' },
         count: 5,
       } as MessageReaction;
 
       const mockReactions = new Collection<string, MessageReaction>();
-      mockReactions.set("thumbsup", mockReaction);
+      mockReactions.set('thumbsup', mockReaction);
 
       const mockAuthor = {
-        id: "123456789",
-        tag: "TestUser#1234",
+        id: '123456789',
+        tag: 'TestUser#1234',
       } as User;
 
       const mockMessage = {
-        id: "999",
+        id: '999',
         author: mockAuthor,
-        content: "Great idea!",
+        content: 'Great idea!',
         channel: mockChannel,
         createdTimestamp: 1234567890000,
         editedTimestamp: null,
@@ -319,12 +318,12 @@ describe("contextResolver", () => {
         hasThread: false,
       } as unknown as Message;
 
-      const result = await contextResolver(mockMessage, "bot123");
+      const result = await contextResolver(mockMessage, 'bot123');
 
-      expect(result).toContain("* reactions: 👍 (5)");
+      expect(result).toContain('* reactions: 👍 (5)');
     });
 
-    it("should include reply reference when present", async () => {
+    it('should include reply reference when present', async () => {
       const mockChannel = {
         messages: {
           fetch: vi.fn().mockResolvedValue(new Collection()),
@@ -332,18 +331,18 @@ describe("contextResolver", () => {
       };
 
       const mockReference = {
-        messageId: "888777666",
+        messageId: '888777666',
       } as MessageReference;
 
       const mockAuthor = {
-        id: "123456789",
-        tag: "TestUser#1234",
+        id: '123456789',
+        tag: 'TestUser#1234',
       } as User;
 
       const mockMessage = {
-        id: "999",
+        id: '999',
         author: mockAuthor,
-        content: "Replying to that",
+        content: 'Replying to that',
         channel: mockChannel,
         createdTimestamp: 1234567890000,
         editedTimestamp: null,
@@ -359,12 +358,12 @@ describe("contextResolver", () => {
         hasThread: false,
       } as unknown as Message;
 
-      const result = await contextResolver(mockMessage, "bot123");
+      const result = await contextResolver(mockMessage, 'bot123');
 
-      expect(result).toContain("* reply to message: 888777666");
+      expect(result).toContain('* reply to message: 888777666');
     });
 
-    it("should include thread indicator when message has thread", async () => {
+    it('should include thread indicator when message has thread', async () => {
       const mockChannel = {
         messages: {
           fetch: vi.fn().mockResolvedValue(new Collection()),
@@ -372,14 +371,14 @@ describe("contextResolver", () => {
       };
 
       const mockAuthor = {
-        id: "123456789",
-        tag: "TestUser#1234",
+        id: '123456789',
+        tag: 'TestUser#1234',
       } as User;
 
       const mockMessage = {
-        id: "999",
+        id: '999',
         author: mockAuthor,
-        content: "Starting a discussion",
+        content: 'Starting a discussion',
         channel: mockChannel,
         createdTimestamp: 1234567890000,
         editedTimestamp: null,
@@ -395,9 +394,9 @@ describe("contextResolver", () => {
         hasThread: true,
       } as unknown as Message;
 
-      const result = await contextResolver(mockMessage, "bot123");
+      const result = await contextResolver(mockMessage, 'bot123');
 
-      expect(result).toContain("* has thread");
+      expect(result).toContain('* has thread');
     });
   });
 });
