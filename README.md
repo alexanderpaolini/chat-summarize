@@ -55,32 +55,24 @@ chat run send a message saying hello
 
 **⚠️ SECURITY WARNING:** 
 - The `run` command executes AI-generated JavaScript code with access to the Discord bot's permissions
-- This feature is **RESTRICTED** to authorized users only via the `ALLOWED_USER_IDS` environment variable
+- This feature is **RESTRICTED** to admin users only via the `ADMIN_USER_IDS` environment variable
 - Bot accounts are automatically blocked from executing any commands
 - While the command restricts access to file system and shell commands, it can still perform actions on Discord (send messages, modify channels, etc.) based on the bot's permissions
 - The AI model may misinterpret instructions or generate unexpected code
 - Be aware of potential prompt injection attacks where malicious users try to manipulate the AI
 - Use this feature at your own risk and in controlled environments only
 
-**Access Control:**
-To enable the `run` command for specific users, set the `ALLOWED_USER_IDS` environment variable to a comma-separated list of Discord user IDs:
-```bash
-ALLOWED_USER_IDS="123456789012345678,987654321098765432"
-```
-
-Only users in this list will be able to:
-- Execute the `run` command
-- See the `run` command in help output
-
 **Admin Privileges:**
-To grant admin privileges (access to additional AI models), set the `ADMIN_USER_IDS` environment variable:
+To grant admin privileges, set the `ADMIN_USER_IDS` environment variable to a comma-separated list of Discord user IDs:
 ```bash
-ADMIN_USER_IDS="123456789012345678"
+ADMIN_USER_IDS="123456789012345678,987654321098765432"
 ```
 
 Admin users have access to:
+- Execute the `run` command
+- See the `run` command in help output
+- Access to additional AI models (when configured)
 - All models available to regular users
-- Additional admin-only models (when configured)
 
 To find a user's Discord ID, enable Developer Mode in Discord settings, then right-click on a user and select "Copy ID".
 
@@ -143,8 +135,7 @@ This bot can be run in a lightweight Docker container for easy deployment.
    ```bash
    OPENROUTER_API_KEY="your-openrouter-api-key"
    DISCORD_TOKEN="your-discord-bot-token"
-   ALLOWED_USER_IDS="comma,separated,discord,user,ids"  # Optional: Required for 'run' command
-   ADMIN_USER_IDS="comma,separated,discord,user,ids"    # Optional: For admin model access
+   ADMIN_USER_IDS="comma,separated,discord,user,ids"    # Optional: For admin privileges (run command & additional models)
    ```
 
 3. **Start the bot using Docker Compose:**

@@ -10,11 +10,10 @@ export const USER_ALLOWED_MODELS = ['google/gemini-2.5-flash-lite'] as const;
 
 /**
  * List of models available only to admin users
- * Currently contains the same models as regular users, but can be extended
- * by adding admin-only models here (e.g., premium or more expensive models)
+ * Includes all user models plus additional admin-only models
  */
 export const ADMIN_ALLOWED_MODELS = [
-  'google/gemini-2.5-flash-lite',
+  ...USER_ALLOWED_MODELS,
   // Add admin-only models here as they become available
   // Example: 'openai/gpt-4', 'anthropic/claude-3-opus'
 ] as const;
