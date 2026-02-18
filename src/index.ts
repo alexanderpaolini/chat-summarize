@@ -3,7 +3,7 @@ import { env } from './env';
 import { logger } from './lib/logger';
 import { parseCommand } from './lib/commandParser';
 import { commandRegistry } from './lib/commands';
-import { hasPermission } from './lib/permissions';
+import { isAdmin } from './lib/permissions';
 
 const client = new Client({
   intents: [
@@ -59,8 +59,8 @@ client.on('messageCreate', async message => {
   }
 
   try {
-    // Parse command from message
-    const parsed = parseCommand(message.content);
+    const userIsAdmin = isAdmin(message, env.ADMIN_USER_IDS);
+    const parsed = parseCommand(message.content, userIsAdmin);
 
     // Get the command from registry
     const command = commandRegistry.get(parsed.command);
@@ -75,10 +75,7 @@ client.on('messageCreate', async message => {
     }
 
     // Check if command requires permission
-    if (
-      command.requiresPermission &&
-      !hasPermission(message, env.ALLOWED_USER_IDS)
-    ) {
+    if (command.requiresPermission && !isAdmin(message, env.ADMIN_USER_IDS)) {
       logger.warn(
         `User ${message.author.tag} (${message.author.id}) attempted to execute restricted command: ${command.name}`
       );

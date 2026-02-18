@@ -127,5 +127,37 @@ describe('parseCommand', () => {
       expect(result.options.model).toBe('google/gemini-2.5-flash-lite');
       expect(result.options.query).toBe('what happened');
     });
+
+    it('should allow valid model for regular users', () => {
+      const result = parseCommand(
+        'chat summarize --model google/gemini-2.5-flash-lite',
+        false // not admin
+      );
+      expect(result.options.model).toBe('google/gemini-2.5-flash-lite');
+    });
+
+    it('should allow valid model for admin users', () => {
+      const result = parseCommand(
+        'chat summarize --model google/gemini-2.5-flash-lite',
+        true // admin
+      );
+      expect(result.options.model).toBe('google/gemini-2.5-flash-lite');
+    });
+
+    it('should reject invalid model for regular users', () => {
+      const result = parseCommand(
+        'chat summarize --model invalid-model',
+        false // not admin
+      );
+      expect(result.options.model).toBeUndefined();
+    });
+
+    it('should reject invalid model for admin users', () => {
+      const result = parseCommand(
+        'chat summarize --model invalid-model',
+        true // admin
+      );
+      expect(result.options.model).toBeUndefined();
+    });
   });
 });

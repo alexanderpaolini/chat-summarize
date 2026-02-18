@@ -1,7 +1,7 @@
 import { Command, CommandContext } from './types';
-import { ALLOWED_MODELS } from '../../options';
+import { USER_ALLOWED_MODELS, ADMIN_ALLOWED_MODELS } from '../../options';
 import { commandRegistry } from './registry';
-import { hasPermission } from '../permissions';
+import { isAdmin } from '../permissions';
 import { env } from '../../env';
 
 export const helpCommand: Command = {
@@ -12,10 +12,15 @@ export const helpCommand: Command = {
 
     // Get all commands and filter based on permissions
     const allCommands = commandRegistry.getAll();
-    const userHasPermission = hasPermission(message, env.ALLOWED_USER_IDS);
+    const userIsAdmin = isAdmin(message, env.ADMIN_USER_IDS);
     const availableCommands = allCommands.filter(
-      cmd => !cmd.requiresPermission || userHasPermission
+      cmd => !cmd.requiresPermission || userIsAdmin
     );
+
+    // Determine available models based on admin status
+    const availableModels = userIsAdmin
+      ? ADMIN_ALLOWED_MODELS
+      : USER_ALLOWED_MODELS;
 
     // Build command list for help text
     const commandList = availableCommands
@@ -45,12 +50,12 @@ ${commandList}
 • \`--allow-summarizer\` or \`-S\` - Include bot messages in summaries
 • \`--amount <number>\` or \`-N <number>\` - Specify number of messages to summarize
 • \`--model <model>\` or \`-M <model>\` - Choose AI model for summarization
-  Available models: ${ALLOWED_MODELS.join(', ')}
+  Available models: ${availableModels.join(', ')}
 
 **Examples:**
 \`chat summarize\` - Summarize messages from your previous message to now
 \`@bot summarize -S --amount 100\` - Summarize last 100 messages including bot messages
-\`chat what did Sarah say?\` - Ask a specific question about the conversation${userHasPermission ? '\n`chat run remind me in 10 seconds to do something` - Generate and run code\n`@bot run ping 1.1.1.1` - Execute a ping command' : ''}
+\`chat what did Sarah say?\` - Ask a specific question about the conversation${userIsAdmin ? '\n`chat run remind me in 10 seconds to do something` - Generate and run code\n`@bot run ping 1.1.1.1` - Execute a ping command' : ''}
 \`@bot --help\` - Show this help message
 `.trim();
 

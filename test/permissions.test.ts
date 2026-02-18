@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { hasPermission } from '../src/lib/permissions';
+import { hasPermission, isAdmin } from '../src/lib/permissions';
 import { Message, User } from 'discord.js';
 
 describe('permissions', () => {
@@ -61,6 +61,65 @@ describe('permissions', () => {
       expect(hasPermission(mockMessage, ['111111111', '222222222'])).toBe(
         false
       );
+    });
+  });
+
+  describe('isAdmin', () => {
+    it('should return false for bot users', () => {
+      const mockMessage = {
+        author: {
+          id: '123456789',
+          bot: true,
+        } as User,
+      } as Message;
+
+      expect(isAdmin(mockMessage, ['123456789'])).toBe(false);
+    });
+
+    it('should return false when no admin user IDs are provided', () => {
+      const mockMessage = {
+        author: {
+          id: '123456789',
+          bot: false,
+        } as User,
+      } as Message;
+
+      expect(isAdmin(mockMessage, [])).toBe(false);
+    });
+
+    it('should return true for admin user ID', () => {
+      const mockMessage = {
+        author: {
+          id: '123456789',
+          bot: false,
+        } as User,
+      } as Message;
+
+      expect(isAdmin(mockMessage, ['123456789'])).toBe(true);
+    });
+
+    it('should return true for admin user ID in list', () => {
+      const mockMessage = {
+        author: {
+          id: '222222222',
+          bot: false,
+        } as User,
+      } as Message;
+
+      expect(
+        isAdmin(mockMessage, ['111111111', '222222222', '333333333'])
+      ).toBe(true);
+    });
+
+    it('should return false for non-admin user ID', () => {
+      const mockMessage = {
+        author: {
+          id: '999999999',
+          bot: false,
+        } as User,
+      } as Message;
+
+      expect(isAdmin(mockMessage, ['111111111', '222222222'])).toBe(false);
     });
   });
 });
