@@ -9,7 +9,8 @@ export const QUERY_SYSTEM_PROMPT =
   '- Mention users as <@{USER ID}>\n' +
   '- Mention channels as <#{CHANNEL ID}>\n' +
   '- Link attachments using their URLs\n' +
-  '- Content prefixed with "* " is metadata';
+  '- Content prefixed with "* " is metadata\n' +
+  '- Do not begin with filler phrases';
 
 export const TLDR_SYSTEM_PROMPT =
   'Summarize the conversation.\n' +
@@ -17,7 +18,8 @@ export const TLDR_SYSTEM_PROMPT =
   '- Mention channels as <#{CHANNEL ID}>\n' +
   '- Link attachments using their URLs\n' +
   '- Include source URLs after relevant sections\n' +
-  '- Content prefixed with "* " is metadata';
+  '- Content prefixed with "* " is metadata\n' +
+  '- Avoid filler phrases';
 
 export const OVERALL_TLDR_PROMPT =
   '- Include an overall TLDR at the beginning without citations';
