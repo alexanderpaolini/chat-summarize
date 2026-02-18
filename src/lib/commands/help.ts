@@ -1,7 +1,7 @@
 import { Command, CommandContext } from './types';
-import { ALLOWED_MODELS } from '../../options';
+import { USER_ALLOWED_MODELS, ADMIN_ALLOWED_MODELS } from '../../options';
 import { commandRegistry } from './registry';
-import { hasPermission } from '../permissions';
+import { hasPermission, isAdmin } from '../permissions';
 import { env } from '../../env';
 
 export const helpCommand: Command = {
@@ -13,9 +13,15 @@ export const helpCommand: Command = {
     // Get all commands and filter based on permissions
     const allCommands = commandRegistry.getAll();
     const userHasPermission = hasPermission(message, env.ALLOWED_USER_IDS);
+    const userIsAdmin = isAdmin(message, env.ADMIN_USER_IDS);
     const availableCommands = allCommands.filter(
       cmd => !cmd.requiresPermission || userHasPermission
     );
+
+    // Determine available models based on admin status
+    const availableModels = userIsAdmin
+      ? ADMIN_ALLOWED_MODELS
+      : USER_ALLOWED_MODELS;
 
     // Build command list for help text
     const commandList = availableCommands
@@ -45,7 +51,7 @@ ${commandList}
 • \`--allow-summarizer\` or \`-S\` - Include bot messages in summaries
 • \`--amount <number>\` or \`-N <number>\` - Specify number of messages to summarize
 • \`--model <model>\` or \`-M <model>\` - Choose AI model for summarization
-  Available models: ${ALLOWED_MODELS.join(', ')}
+  Available models: ${availableModels.join(', ')}
 
 **Examples:**
 \`chat summarize\` - Summarize messages from your previous message to now

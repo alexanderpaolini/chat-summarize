@@ -19,13 +19,6 @@ export const ADMIN_ALLOWED_MODELS = [
   // Example: 'openai/gpt-4', 'anthropic/claude-3-opus'
 ] as const;
 
-/**
- * @deprecated Use USER_ALLOWED_MODELS or ADMIN_ALLOWED_MODELS instead
- * This constant is kept for backward compatibility with existing code/tests.
- * Maps to USER_ALLOWED_MODELS since that's the baseline set all users can access.
- */
-export const ALLOWED_MODELS = USER_ALLOWED_MODELS;
-
 export type UserAllowedModel = (typeof USER_ALLOWED_MODELS)[number];
 export type AdminAllowedModel = (typeof ADMIN_ALLOWED_MODELS)[number];
 export type AllowedModel = UserAllowedModel | AdminAllowedModel;
