@@ -159,23 +159,8 @@ docker compose build
 - Configured to restart automatically unless stopped manually
 - Uses environment variables from `.env` file
 
-## Development
+## Contributing
 
-### Testing
+Interested in contributing? See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to get started.
 
-This project uses [Vitest](https://vitest.dev/) for testing.
-
-Run tests:
-```bash
-pnpm test
-```
-
-Run tests in watch mode:
-```bash
-pnpm run test:watch
-```
-
-Run tests with UI:
-```bash
-pnpm run test:ui
-```
+For development and testing information, see [DEVELOPMENT.md](DEVELOPMENT.md).
