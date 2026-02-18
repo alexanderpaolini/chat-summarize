@@ -10,7 +10,7 @@ WORKDIR /app
 # Copy package files
 COPY package.json pnpm-lock.yaml ./
 
-# Install dependencies (pnpm will be automatically installed by corepack)
+# Install all dependencies (includes tsx and dotenv-cli needed for runtime)
 RUN pnpm install --frozen-lockfile
 
 # Copy source code and configuration

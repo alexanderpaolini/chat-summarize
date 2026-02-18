@@ -9,5 +9,7 @@ services:
       - path: .env
         required: true
     volumes:
-      # Mount source code for development (optional, can be removed for production)
+      # Development: This volume overrides the /app/src directory in the container
+      # with your local src directory, allowing live code changes without rebuilding.
+      # For production, comment out or remove this line to use the built-in source.
       - ./src:/app/src:ro
