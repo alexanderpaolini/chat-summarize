@@ -1,0 +1,15 @@
+services:
+  chat-summarize:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chat-summarize-bot
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: true
+    volumes:
+      # Development: This volume overrides the /app/src directory in the container
+      # with your local src directory, allowing live code changes without rebuilding.
+      # For production, comment out or remove this line to use the built-in source.
+      - ./src:/app/src:ro

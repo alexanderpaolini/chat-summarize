@@ -1,0 +1,36 @@
+# Git
+.git
+.gitignore
+
+# Node
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Environment
+.env
+.env*.local
+.env-e
+
+# TypeScript build
+dist
+.cache
+
+# Testing
+test
+*.test.ts
+vitest.config.ts
+
+# Documentation
+README.md
+LICENSE
+
+# macOS
+.DS_Store
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
