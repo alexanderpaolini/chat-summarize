@@ -5,6 +5,10 @@ export const env = createEnv({
   server: {
     OPENROUTER_API_KEY: z.string(),
     DISCORD_TOKEN: z.string(),
+    ALLOWED_USER_IDS: z
+      .string()
+      .optional()
+      .transform(val => (val ? val.split(',').map(id => id.trim()) : [])),
   },
   runtimeEnv: process.env,
 });

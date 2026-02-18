@@ -3,6 +3,7 @@ import { env } from './env';
 import { logger } from './lib/logger';
 import { parseCommand } from './lib/commandParser';
 import { commandRegistry } from './lib/commands';
+import { hasPermission } from './lib/permissions';
 
 const client = new Client({
   intents: [
@@ -42,6 +43,9 @@ client.once('clientReady', () => {
 client.on('messageCreate', async message => {
   if (!message.guild) return;
 
+  // Ignore all messages from bots
+  if (message.author.bot) return;
+
   if (!isPrompt(message)) return;
 
   // Handle status check - when message is only a bot mention
@@ -65,6 +69,21 @@ client.on('messageCreate', async message => {
       logger.warn(`Unknown command: ${parsed.command}`);
       await message.reply({
         content: `Unknown command: \`${parsed.command}\`. Use \`--help\` to see available commands.`,
+        allowedMentions: { users: [] },
+      });
+      return;
+    }
+
+    // Check if command requires permission
+    if (
+      command.requiresPermission &&
+      !hasPermission(message, env.ALLOWED_USER_IDS)
+    ) {
+      logger.warn(
+        `User ${message.author.tag} (${message.author.id}) attempted to execute restricted command: ${command.name}`
+      );
+      await message.reply({
+        content: `You don't have permission to execute this command.`,
         allowedMentions: { users: [] },
       });
       return;
