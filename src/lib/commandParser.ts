@@ -1,5 +1,9 @@
 import minimist from 'minimist';
-import { ALLOWED_MODELS, type AllowedModel } from '../options';
+import {
+  USER_ALLOWED_MODELS,
+  ADMIN_ALLOWED_MODELS,
+  type AllowedModel,
+} from '../options';
 import { logger } from './logger';
 
 export interface CommandOptions {
@@ -21,9 +25,13 @@ export interface ParsedCommand {
  * Parses a full command with Unix-like syntax from a Discord message
  * Supports: [chat | @bot] [command] [--options]
  * @param content The message content (e.g., "chat summarize --amount 100 -S" or "@bot --help")
+ * @param isAdminUser Whether the user is an admin (affects allowed models)
  * @returns Parsed command with name, options, and help flag
  */
-export function parseCommand(content: string): ParsedCommand {
+export function parseCommand(
+  content: string,
+  isAdminUser = false
+): ParsedCommand {
   // Remove trigger phrase "chat" or bot mentions
   const cleanedContent = content
     .replace(/^chat\s+/i, '')
@@ -83,11 +91,21 @@ export function parseCommand(content: string): ParsedCommand {
       ? queryParts.join(' ').trim() || undefined
       : undefined;
 
-  // Validate and parse model
+  // Validate and parse model based on user's admin status
   const modelValue = argv.model;
+  const allowedModels = isAdminUser
+    ? ADMIN_ALLOWED_MODELS
+    : USER_ALLOWED_MODELS;
   const isValidModel =
-    modelValue && ALLOWED_MODELS.includes(modelValue as AllowedModel);
+    modelValue && allowedModels.includes(modelValue as AllowedModel);
   const model = isValidModel ? (modelValue as AllowedModel) : undefined;
+
+  // Log if a user tried to use an invalid model
+  if (modelValue && !isValidModel) {
+    logger.warn(
+      `User attempted to use invalid model: ${modelValue} (isAdmin: ${isAdminUser})`
+    );
+  }
 
   const options: CommandOptions = {
     ttl: argv['ttl'] ? Number(argv['ttl']) : undefined,

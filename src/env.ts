@@ -9,6 +9,10 @@ export const env = createEnv({
       .string()
       .optional()
       .transform(val => (val ? val.split(',').map(id => id.trim()) : [])),
+    ADMIN_USER_IDS: z
+      .string()
+      .optional()
+      .transform(val => (val ? val.split(',').map(id => id.trim()) : [])),
   },
   runtimeEnv: process.env,
 });

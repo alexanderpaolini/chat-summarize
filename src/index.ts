@@ -3,7 +3,7 @@ import { env } from './env';
 import { logger } from './lib/logger';
 import { parseCommand } from './lib/commandParser';
 import { commandRegistry } from './lib/commands';
-import { hasPermission } from './lib/permissions';
+import { hasPermission, isAdmin } from './lib/permissions';
 
 const client = new Client({
   intents: [
@@ -59,8 +59,11 @@ client.on('messageCreate', async message => {
   }
 
   try {
-    // Parse command from message
-    const parsed = parseCommand(message.content);
+    // Check if user is admin
+    const userIsAdmin = isAdmin(message, env.ADMIN_USER_IDS);
+
+    // Parse command from message with admin status
+    const parsed = parseCommand(message.content, userIsAdmin);
 
     // Get the command from registry
     const command = commandRegistry.get(parsed.command);

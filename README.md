@@ -72,6 +72,16 @@ Only users in this list will be able to:
 - Execute the `run` command
 - See the `run` command in help output
 
+**Admin Privileges:**
+To grant admin privileges (access to additional AI models), set the `ADMIN_USER_IDS` environment variable:
+```bash
+ADMIN_USER_IDS="123456789012345678"
+```
+
+Admin users have access to:
+- All models available to regular users
+- Additional admin-only models (when configured)
+
 To find a user's Discord ID, enable Developer Mode in Discord settings, then right-click on a user and select "Copy ID".
 
 ### Command Options
@@ -94,8 +104,9 @@ You can customize the summarization behavior with the following options:
   Example: `chat summarize --amount 100`
 
 - `--model <model-name>` or `-M <model-name>`  
-  Specify which AI model to use for summarization. Available models:
-  - `google/gemini-2.5-flash-lite` (default)
+  Specify which AI model to use for summarization. Model selection may be restricted based on user permissions.
+  - Regular users can select from: `google/gemini-2.5-flash-lite` (default)
+  - Admin users (configured via `ADMIN_USER_IDS`) have access to additional models
   
   Example: `chat summarize --model google/gemini-2.5-flash-lite`
 
@@ -133,6 +144,7 @@ This bot can be run in a lightweight Docker container for easy deployment.
    OPENROUTER_API_KEY="your-openrouter-api-key"
    DISCORD_TOKEN="your-discord-bot-token"
    ALLOWED_USER_IDS="comma,separated,discord,user,ids"  # Optional: Required for 'run' command
+   ADMIN_USER_IDS="comma,separated,discord,user,ids"    # Optional: For admin model access
    ```
 
 3. **Start the bot using Docker Compose:**
