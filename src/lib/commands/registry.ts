@@ -1,7 +1,7 @@
-import { Command } from "./types";
-import { summarizeCommand } from "./summarize";
-import { helpCommand } from "./help";
-import { runCommand } from "./run";
+import { Command } from './types';
+import { summarizeCommand } from './summarize';
+import { helpCommand } from './help';
+import { runCommand } from './run';
 
 class CommandRegistry {
   private commands: Map<string, Command> = new Map();

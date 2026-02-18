@@ -1,6 +1,6 @@
-import minimist from "minimist";
-import { ALLOWED_MODELS, type AllowedModel } from "../options";
-import { logger } from "./logger";
+import minimist from 'minimist';
+import { ALLOWED_MODELS, type AllowedModel } from '../options';
+import { logger } from './logger';
 
 export interface CommandOptions {
   ttl?: number;
@@ -25,24 +25,24 @@ export interface ParsedCommand {
  */
 export function parseCommand(content: string): ParsedCommand {
   // Remove trigger phrase "chat" or bot mentions
-  let cleanedContent = content
-    .replace(/^chat\s+/i, "")
-    .replace(/<@!?\d+>/g, "") // Remove mentions
+  const cleanedContent = content
+    .replace(/^chat\s+/i, '')
+    .replace(/<@!?\d+>/g, '') // Remove mentions
     .trim();
 
   // Parse arguments using minimist
   const args = cleanedContent
-    ? cleanedContent.split(/\s+/).filter((s) => s.length > 0)
+    ? cleanedContent.split(/\s+/).filter(s => s.length > 0)
     : [];
   const argv = minimist(args, {
-    boolean: ["allow-summarizer", "S", "tldr", "T", "help", "h"],
-    string: ["model", "M", "ttl"],
+    boolean: ['allow-summarizer', 'S', 'tldr', 'T', 'help', 'h'],
+    string: ['model', 'M', 'ttl'],
     alias: {
-      S: "allow-summarizer",
-      N: "amount",
-      M: "model",
-      T: "tldr",
-      h: "help",
+      S: 'allow-summarizer',
+      N: 'amount',
+      M: 'model',
+      T: 'tldr',
+      h: 'help',
     },
   });
 
@@ -52,7 +52,7 @@ export function parseCommand(content: string): ParsedCommand {
   // If --help is present, return early
   if (showHelp) {
     return {
-      command: "help",
+      command: 'help',
       options: {},
       showHelp: true,
     };
@@ -60,16 +60,18 @@ export function parseCommand(content: string): ParsedCommand {
 
   // Extract command name from the first non-flag argument
   const nonFlagArgs = argv._.filter(
-    (arg) => (typeof arg === "string" || typeof arg === "number") && String(arg).trim().length > 0,
+    arg =>
+      (typeof arg === 'string' || typeof arg === 'number') &&
+      String(arg).trim().length > 0
   ).map(arg => String(arg));
-  
-  let command = "summarize"; // default command
+
+  let command = 'summarize'; // default command
   let queryParts = nonFlagArgs;
-  
+
   // Check if first argument is a known command
   if (nonFlagArgs.length > 0) {
     const firstArg = nonFlagArgs[0].toLowerCase();
-    if (firstArg === "summarize" || firstArg === "help" || firstArg === "run") {
+    if (firstArg === 'summarize' || firstArg === 'help' || firstArg === 'run') {
       command = firstArg;
       queryParts = nonFlagArgs.slice(1); // Remove command from query parts
     }
@@ -78,7 +80,7 @@ export function parseCommand(content: string): ParsedCommand {
   // Extract query from remaining non-flag arguments
   const query =
     queryParts.length > 0
-      ? queryParts.join(" ").trim() || undefined
+      ? queryParts.join(' ').trim() || undefined
       : undefined;
 
   // Validate and parse model
@@ -88,17 +90,17 @@ export function parseCommand(content: string): ParsedCommand {
   const model = isValidModel ? (modelValue as AllowedModel) : undefined;
 
   const options: CommandOptions = {
-    ttl: argv["ttl"] ? Number(argv["ttl"]) : undefined,
-    tldr: argv["tldr"],
-    allowSummarizer: argv["allow-summarizer"] || false,
-    amount: typeof argv.amount === "number" ? argv.amount : undefined,
+    ttl: argv['ttl'] ? Number(argv['ttl']) : undefined,
+    tldr: argv['tldr'],
+    allowSummarizer: argv['allow-summarizer'] || false,
+    amount: typeof argv.amount === 'number' ? argv.amount : undefined,
     query,
     model,
   };
 
   // Log parsed command and options (excluding query to avoid logging potentially sensitive user input)
   logger.info(
-    `Parsed command: ${command}, options: ${JSON.stringify({ ...options, query: options.query ? "[redacted]" : undefined })}`,
+    `Parsed command: ${command}, options: ${JSON.stringify({ ...options, query: options.query ? '[redacted]' : undefined })}`
   );
 
   return {

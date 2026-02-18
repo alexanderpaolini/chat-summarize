@@ -1,9 +1,9 @@
-import { Command, CommandContext } from "./types";
-import { ALLOWED_MODELS } from "../../options";
+import { Command, CommandContext } from './types';
+import { ALLOWED_MODELS } from '../../options';
 
 export const helpCommand: Command = {
-  name: "help",
-  description: "Show available commands and options",
+  name: 'help',
+  description: 'Show available commands and options',
   execute: async (context: CommandContext) => {
     const { message } = context;
 
@@ -23,7 +23,7 @@ export const helpCommand: Command = {
 • \`--allow-summarizer\` or \`-S\` - Include bot messages in summaries
 • \`--amount <number>\` or \`-N <number>\` - Specify number of messages to summarize
 • \`--model <model>\` or \`-M <model>\` - Choose AI model for summarization
-  Available models: ${ALLOWED_MODELS.join(", ")}
+  Available models: ${ALLOWED_MODELS.join(', ')}
 
 **Examples:**
 \`chat summarize\` - Summarize messages from your previous message to now

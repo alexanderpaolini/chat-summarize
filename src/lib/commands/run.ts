@@ -1,8 +1,8 @@
-import { Command, CommandContext } from "./types";
-import { openRouter } from "../openRouter";
-import { logger } from "../logger";
-import { DEFAULT_LLM_MODEL } from "../../options";
-import * as Discord from "discord.js";
+import { Command, CommandContext } from './types';
+import { openRouter } from '../openRouter';
+import { logger } from '../logger';
+import { DEFAULT_LLM_MODEL } from '../../options';
+import * as Discord from 'discord.js';
 
 const RUN_SYSTEM_PROMPT = `You are a code generation assistant that creates JavaScript code to be executed in a Discord bot environment.
 
@@ -48,8 +48,9 @@ await message.reply(\`Server name: \${message.guild?.name || 'Unknown'}\`);
 Generate ONLY the code, nothing else.`;
 
 export const runCommand: Command = {
-  name: "run",
-  description: "Generate and execute code based on natural language instructions",
+  name: 'run',
+  description:
+    'Generate and execute code based on natural language instructions',
   execute: async (context: CommandContext) => {
     const { message, options } = context;
 
@@ -58,7 +59,8 @@ export const runCommand: Command = {
 
     if (!instruction || !instruction.trim()) {
       await message.reply({
-        content: "Please provide an instruction for what code to run. Example: `chat run ping 1.1.1.1`",
+        content:
+          'Please provide an instruction for what code to run. Example: `chat run ping 1.1.1.1`',
         allowedMentions: { users: [] },
       });
       return;
@@ -68,7 +70,7 @@ export const runCommand: Command = {
       logger.info(`Generating code for instruction: ${instruction}`);
 
       // Send typing indicator
-      if ("sendTyping" in message.channel) {
+      if ('sendTyping' in message.channel) {
         await message.channel.sendTyping();
       }
 
@@ -81,24 +83,24 @@ export const runCommand: Command = {
           model,
           messages: [
             {
-              role: "system",
+              role: 'system',
               content: RUN_SYSTEM_PROMPT,
             },
             {
-              role: "user",
+              role: 'user',
               content: `Generate code for: ${instruction}`,
             },
           ],
         },
       });
 
-      let generatedCode = String(res.choices[0].message.content ?? "");
+      let generatedCode = String(res.choices[0].message.content ?? '');
       logger.info(`Generated code (${generatedCode.length} characters)`);
 
       // Clean up the code: remove markdown code blocks if present
       generatedCode = generatedCode
-        .replace(/^```(?:javascript|js)?\n?/i, "")
-        .replace(/\n?```$/i, "")
+        .replace(/^```(?:javascript|js)?\n?/i, '')
+        .replace(/\n?```$/i, '')
         .trim();
 
       logger.info(`Executing generated code:\n${generatedCode}`);
@@ -109,9 +111,9 @@ export const runCommand: Command = {
       // Execute the generated code without access to require
       // We use an async function wrapper to support both sync and async code
       const executeFn = new Function(
-        "message",
-        "client",
-        "Discord",
+        'message',
+        'client',
+        'Discord',
         `return (async () => {
           ${generatedCode}
         })();`
@@ -120,9 +122,9 @@ export const runCommand: Command = {
       // Execute with proper context
       await executeFn(message, client, Discord);
 
-      logger.info("Code executed successfully");
+      logger.info('Code executed successfully');
     } catch (err) {
-      logger.error("Failed to execute run command");
+      logger.error('Failed to execute run command');
       logger.error(err);
       await message.reply({
         content: `Failed to execute command: ${err instanceof Error ? err.message : String(err)}`,

@@ -1,10 +1,10 @@
-import * as winston from "winston";
+import * as winston from 'winston';
 
 export const logger = winston.createLogger({
-  level: "info",
+  level: 'info',
   format: winston.format.combine(
     winston.format.colorize(),
-    winston.format.simple(),
+    winston.format.simple()
   ),
   transports: [new winston.transports.Console()],
 });

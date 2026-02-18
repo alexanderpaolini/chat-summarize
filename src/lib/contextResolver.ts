@@ -1,18 +1,20 @@
-import { Message, Collection } from "discord.js";
-import { CommandOptions } from "./commandParser";
-import { logger } from "./logger";
+import { Message, Collection } from 'discord.js';
+import { CommandOptions } from './commandParser';
+import { logger } from './logger';
 
 const MAX_EMBED_DESCRIPTION_LENGTH = 100;
 
 export async function contextResolver(
   initMessage: Message,
   botUserId: string,
-  options: CommandOptions = { allowSummarizer: false, tldr: false },
+  options: CommandOptions = { allowSummarizer: false, tldr: false }
 ): Promise<string> {
   const authorId = initMessage.author.id;
   const channel = initMessage.channel;
 
-  logger.info(`Fetching messages from channel (amount: ${options.amount ?? "auto"})`);
+  logger.info(
+    `Fetching messages from channel (amount: ${options.amount ?? 'auto'})`
+  );
 
   let beforeId: string | undefined = initMessage.id;
   const collected: Message[] = [];
@@ -68,47 +70,47 @@ export async function contextResolver(
   logger.info(`Collected ${collected.length} messages for summarization`);
 
   const res = collected
-    .map((m) => {
-      let s = "";
+    .map(m => {
+      let s = '';
       s += `${m.author.tag} (${m.author.id}) | ${new Date(
-        m.editedTimestamp ?? m.createdTimestamp,
+        m.editedTimestamp ?? m.createdTimestamp
       ).toLocaleString()}\n`;
       s += m.content;
 
       if (m.mentions.users.size) {
-        s += "\n";
+        s += '\n';
         s += `* mentions (users): ${m.mentions.users
-          .map((x) => `${x.tag} (${x.id})`)
-          .join(", ")}`;
+          .map(x => `${x.tag} (${x.id})`)
+          .join(', ')}`;
       }
 
       if (m.mentions.channels.size) {
-        s += "\n";
+        s += '\n';
         s += `* mentions (channels): ${m.mentions.channels
-          .map((x) => `${x.id}`)
-          .join(", ")}`;
+          .map(x => `${x.id}`)
+          .join(', ')}`;
       }
 
       if (m.mentions.roles.size) {
-        s += "\n";
+        s += '\n';
         s += `* mentions (roles): ${m.mentions.roles
-          .map((role) => `${role.name} (${role.id})`)
-          .join(", ")}`;
+          .map(role => `${role.name} (${role.id})`)
+          .join(', ')}`;
       }
 
       if (m.attachments.size) {
-        s += "\n";
+        s += '\n';
         s += `* attachments: ${m.attachments
           .map(
-            (attachment) =>
-              `${attachment.name || "file"} (${attachment.contentType || "unknown type"}) - ${attachment.url}`,
+            attachment =>
+              `${attachment.name || 'file'} (${attachment.contentType || 'unknown type'}) - ${attachment.url}`
           )
-          .join(", ")}`;
+          .join(', ')}`;
       }
 
       if (m.embeds.length) {
-        s += "\n";
-        s += `* embeds: ${m.embeds.length} ${m.embeds.length === 1 ? "embed" : "embeds"}`;
+        s += '\n';
+        s += `* embeds: ${m.embeds.length} ${m.embeds.length === 1 ? 'embed' : 'embeds'}`;
         m.embeds.forEach((embed, idx) => {
           if (embed.title) {
             s += `\n  - [${idx + 1}] ${embed.title}`;
@@ -118,35 +120,35 @@ export async function contextResolver(
               embed.description.length > MAX_EMBED_DESCRIPTION_LENGTH;
             const desc = embed.description.substring(
               0,
-              MAX_EMBED_DESCRIPTION_LENGTH,
+              MAX_EMBED_DESCRIPTION_LENGTH
             );
-            s += `\n    ${desc}${isTruncated ? "..." : ""}`;
+            s += `\n    ${desc}${isTruncated ? '...' : ''}`;
           }
         });
       }
 
       if (m.reactions.cache.size) {
-        s += "\n";
+        s += '\n';
         s += `* reactions: ${Array.from(m.reactions.cache.values())
-          .map((reaction) => `${reaction.emoji.name} (${reaction.count})`)
-          .join(", ")}`;
+          .map(reaction => `${reaction.emoji.name} (${reaction.count})`)
+          .join(', ')}`;
       }
 
       if (m.reference) {
-        s += "\n";
+        s += '\n';
         s += `* reply to message: ${m.reference.messageId}`;
       }
 
       if (m.hasThread) {
-        s += "\n";
+        s += '\n';
         s += `* has thread`;
       }
 
-      s += "* url: " + m.url;
+      s += '* url: ' + m.url;
 
       return s;
     })
-    .join("\n\n");
+    .join('\n\n');
 
   return res;
 }

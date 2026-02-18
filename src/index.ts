@@ -1,12 +1,8 @@
-import {
-  Client,
-  GatewayIntentBits,
-  Message,
-} from "discord.js";
-import { env } from "./env";
-import { logger } from "./lib/logger";
-import { parseCommand } from "./lib/commandParser";
-import { commandRegistry } from "./lib/commands";
+import { Client, GatewayIntentBits, Message } from 'discord.js';
+import { env } from './env';
+import { logger } from './lib/logger';
+import { parseCommand } from './lib/commandParser';
+import { commandRegistry } from './lib/commands';
 
 const client = new Client({
   intents: [
@@ -18,38 +14,41 @@ const client = new Client({
 
 const isPrompt = (m: Message) => {
   const content = m.content.toLowerCase();
+  const userId = client.user?.id;
   return (
-    content === "chat" ||
-    content.startsWith("chat ") ||
-    content.startsWith("chat\n") ||
-    m.mentions.users.has(client.user?.id!)
+    content === 'chat' ||
+    content.startsWith('chat ') ||
+    content.startsWith('chat\n') ||
+    (userId && m.mentions.users.has(userId))
   );
 };
 
 const isStatusCheck = (m: Message) => {
   // Check if message only mentions the bot with no other content
   // Remove the bot's own mention and check if anything remains
-  const botMentionPattern = new RegExp(`<@!?${client.user?.id}>`, "g");
+  const userId = client.user?.id;
+  if (!userId) return false;
+  const botMentionPattern = new RegExp(`<@!?${userId}>`, 'g');
   const contentWithoutBotMention = m.content
-    .replace(botMentionPattern, "")
+    .replace(botMentionPattern, '')
     .trim();
-  return m.mentions.users.has(client.user?.id!) && !contentWithoutBotMention;
+  return m.mentions.users.has(userId) && !contentWithoutBotMention;
 };
 
-client.once("clientReady", () => {
+client.once('clientReady', () => {
   logger.info(`Logged in as ${client.user?.tag}`);
 });
 
-client.on("messageCreate", async (message) => {
+client.on('messageCreate', async message => {
   if (!message.guild) return;
 
   if (!isPrompt(message)) return;
 
   // Handle status check - when message is only a bot mention
   if (isStatusCheck(message)) {
-    logger.info("Status check requested");
+    logger.info('Status check requested');
     await message.reply({
-      content: "ready to summarize!",
+      content: 'ready to summarize!',
       allowedMentions: { repliedUser: true, users: [] },
     });
     return;
@@ -58,10 +57,10 @@ client.on("messageCreate", async (message) => {
   try {
     // Parse command from message
     const parsed = parseCommand(message.content);
-    
+
     // Get the command from registry
     const command = commandRegistry.get(parsed.command);
-    
+
     if (!command) {
       logger.warn(`Unknown command: ${parsed.command}`);
       await message.reply({
@@ -79,10 +78,10 @@ client.on("messageCreate", async (message) => {
       options: parsed.options,
     });
   } catch (err) {
-    logger.error("Failed to execute command");
+    logger.error('Failed to execute command');
     logger.error(err);
     await message.reply({
-      content: "An error occurred while processing your command.",
+      content: 'An error occurred while processing your command.',
       allowedMentions: { users: [] },
     });
   }

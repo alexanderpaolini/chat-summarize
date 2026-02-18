@@ -1,19 +1,19 @@
-import { DEFAULT_LLM_MODEL } from "../options";
-import { CommandOptions } from "./commandParser";
-import { openRouter } from "./openRouter";
-import { getSystemPrompt, formatUserContent } from "./prompts";
-import { logger } from "./logger";
+import { DEFAULT_LLM_MODEL } from '../options';
+import { CommandOptions } from './commandParser';
+import { openRouter } from './openRouter';
+import { getSystemPrompt, formatUserContent } from './prompts';
+import { logger } from './logger';
 
 export async function summarize(
   content: string,
   query?: string,
   options?: CommandOptions,
   botUserId?: string,
-  botUserTag?: string,
+  botUserTag?: string
 ) {
   if (!content.trim()) {
-    logger.warn("No content to summarize");
-    return "NOTHING TO SUMMARIZE";
+    logger.warn('No content to summarize');
+    return 'NOTHING TO SUMMARIZE';
   }
 
   const systemPrompt = getSystemPrompt(query, options, botUserId, botUserTag);
@@ -27,18 +27,18 @@ export async function summarize(
       model,
       messages: [
         {
-          role: "system",
+          role: 'system',
           content: systemPrompt,
         },
         {
-          role: "user",
+          role: 'user',
           content: userContent,
         },
       ],
     },
   });
 
-  const summary = String(res.choices[0].message.content ?? "SUMMARY FAILED!");
+  const summary = String(res.choices[0].message.content ?? 'SUMMARY FAILED!');
   logger.info(`LLM response received (${summary.length} characters)`);
 
   return summary;
