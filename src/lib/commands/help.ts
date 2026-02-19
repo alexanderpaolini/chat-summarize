@@ -55,7 +55,9 @@ ${commandList}
 **Examples:**
 \`chat summarize\` - Summarize messages from your previous message to now
 \`@bot summarize -S --amount 100\` - Summarize last 100 messages including bot messages
-\`chat what did Sarah say?\` - Ask a specific question about the conversation${userIsAdmin ? '\n`chat run remind me in 10 seconds to do something` - Generate and run code\n`@bot run ping 1.1.1.1` - Execute a ping command' : ''}
+\`chat what did Sarah say?\` - Ask a specific question about the conversation
+\`chat run remind me in 10 seconds to do something\` - Generate and run code
+\`@bot run ping 1.1.1.1\` - Execute a ping command
 \`@bot --help\` - Show this help message
 `.trim();
 

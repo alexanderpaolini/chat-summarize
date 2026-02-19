@@ -3,6 +3,7 @@ import { openRouter } from '../openRouter';
 import { logger } from '../logger';
 import { DEFAULT_LLM_MODEL } from '../../options';
 import * as Discord from 'discord.js';
+import { createRequire } from 'module';
 
 const RUN_SYSTEM_PROMPT = `You are a code generation assistant that creates JavaScript code to be executed in a Discord bot environment.
 
@@ -10,6 +11,7 @@ IMPORTANT RULES:
 - Generate ONLY executable JavaScript code, NO markdown code blocks, NO explanations, NO comments
 - The code will be executed using eval() in an async context
 - You have access to the discord.js library via the "Discord" variable
+- You can use require() for Node.js built-in modules when helpful
 - You have access to these variables:
   * message - The Discord.js Message object
   * client - The Discord.js Client object
@@ -18,9 +20,7 @@ IMPORTANT RULES:
 - Always handle errors gracefully
 - Return or reply with meaningful output when appropriate
 - Use message.reply() to send responses back to the user
-- DO NOT use require(), import, or access to file system
-- DO NOT execute shell commands or system calls
-- ONLY use the provided Discord.js API and standard JavaScript features
+- Avoid shell commands or file system writes
 
 EXAMPLES:
 
@@ -51,7 +51,7 @@ export const runCommand: Command = {
   name: 'run',
   description:
     'Generate and execute code based on natural language instructions',
-  requiresPermission: true, // Only allowed users can execute this command
+  requiresPermission: false,
   execute: async (context: CommandContext) => {
     const { message, options } = context;
 
@@ -108,20 +108,22 @@ export const runCommand: Command = {
 
       // Create a safe execution context
       const client = message.client;
+      const runtimeRequire = createRequire(import.meta.url);
 
-      // Execute the generated code without access to require
+      // Execute the generated code with the provided context
       // We use an async function wrapper to support both sync and async code
       const executeFn = new Function(
         'message',
         'client',
         'Discord',
+        'require',
         `return (async () => {
           ${generatedCode}
         })();`
       );
 
       // Execute with proper context
-      await executeFn(message, client, Discord);
+      await executeFn(message, client, Discord, runtimeRequire);
 
       logger.info('Code executed successfully');
     } catch (err) {
