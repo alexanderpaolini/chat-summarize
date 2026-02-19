@@ -1,5 +1,18 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, afterEach, beforeAll } from 'vitest';
+import { Message, Client } from 'discord.js';
 import { parseCommand } from '../src/lib/commandParser';
+
+let runCommand: (typeof import('../src/lib/commands/run'))['runCommand'];
+let openRouter: (typeof import('../src/lib/openRouter'))['openRouter'];
+
+beforeAll(async () => {
+  process.env.OPENROUTER_API_KEY =
+    process.env.OPENROUTER_API_KEY ?? 'test-openrouter-key';
+  process.env.DISCORD_TOKEN = process.env.DISCORD_TOKEN ?? 'test-discord-token';
+
+  ({ runCommand } = await import('../src/lib/commands/run'));
+  ({ openRouter } = await import('../src/lib/openRouter'));
+});
 
 describe('parseCommand - run command', () => {
   it("should extract 'run' command with instruction", () => {
@@ -35,5 +48,60 @@ describe('parseCommand - run command', () => {
     );
     expect(result.command).toBe('run');
     expect(result.options.query).toBe('create a reminder for tomorrow at 3pm');
+  });
+});
+
+describe('runCommand execution', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('should expose require to generated code', async () => {
+    const reply = vi.fn().mockResolvedValue(undefined);
+    const sendTyping = vi.fn().mockResolvedValue(undefined);
+    const client = {} as Client;
+
+    const message = {
+      reply,
+      channel: { sendTyping },
+      client,
+    } as unknown as Message;
+
+    type ChatClient = { send: ReturnType<typeof vi.fn> };
+    const chatClient = openRouter.chat as unknown as
+      | { send?: ReturnType<typeof vi.fn> }
+      | undefined;
+
+    if (!chatClient || typeof chatClient.send !== 'function') {
+      (openRouter as unknown as { chat: ChatClient }).chat = {
+        send: vi.fn(),
+      };
+    }
+
+    const chat = (openRouter as unknown as { chat: ChatClient }).chat;
+
+    vi.spyOn(chat, 'send').mockResolvedValue({
+      choices: [
+        {
+          message: {
+            content:
+              'const path = require("path"); await message.reply(path.basename("/tmp/example.txt"));',
+          },
+        },
+      ],
+    });
+
+    await runCommand.execute({
+      message,
+      botUserId: '123',
+      botUserTag: 'bot#0001',
+      options: { query: 'use require' },
+    });
+
+    expect(reply).toHaveBeenCalledWith('example.txt');
+  });
+
+  it('should not require admin permissions', () => {
+    expect(runCommand.requiresPermission).toBe(false);
   });
 });
