@@ -6,18 +6,18 @@ import { CommandOptions } from './commandParser';
 
 export const QUERY_SYSTEM_PROMPT =
   'Answer questions about the conversation.\n' +
-  '- Mention users as <@{USER ID}>\n' +
-  '- Mention channels as <#{CHANNEL ID}>\n' +
+  '- Mention users as <@USER_ID>\n' +
+  '- Mention channels as <#CHANNEL_ID>\n' +
   '- Link attachments using their URLs\n' +
   '- Content prefixed with "* " is metadata\n' +
   '- Do not begin with filler phrases';
 
 export const TLDR_SYSTEM_PROMPT =
   'Summarize the conversation.\n' +
-  '- Mention users as <@{USER ID}>\n' +
-  '- Mention channels as <#{CHANNEL ID}>\n' +
+  '- Mention users as <@USER_ID>\n' +
+  '- Mention channels as <#CHANNEL_ID>\n' +
   '- Link attachments using their URLs\n' +
-  '- Include source URLs after relevant sections\n' +
+  '- Include source URLs inline at the end of the related sentence (same line)\n' +
   '- Content prefixed with "* " is metadata\n' +
   '- Avoid filler phrases';
 
