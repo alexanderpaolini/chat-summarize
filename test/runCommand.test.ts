@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, afterEach, beforeAll } from 'vitest';
+import { Message, Client } from 'discord.js';
 import { parseCommand } from '../src/lib/commandParser';
 
 let runCommand: (typeof import('../src/lib/commands/run'))['runCommand'];
@@ -7,8 +8,7 @@ let openRouter: (typeof import('../src/lib/openRouter'))['openRouter'];
 beforeAll(async () => {
   process.env.OPENROUTER_API_KEY =
     process.env.OPENROUTER_API_KEY ?? 'test-openrouter-key';
-  process.env.DISCORD_TOKEN =
-    process.env.DISCORD_TOKEN ?? 'test-discord-token';
+  process.env.DISCORD_TOKEN = process.env.DISCORD_TOKEN ?? 'test-discord-token';
 
   ({ runCommand } = await import('../src/lib/commands/run'));
   ({ openRouter } = await import('../src/lib/openRouter'));
@@ -59,18 +59,28 @@ describe('runCommand execution', () => {
   it('should expose require to generated code', async () => {
     const reply = vi.fn().mockResolvedValue(undefined);
     const sendTyping = vi.fn().mockResolvedValue(undefined);
+    const client = {} as Client;
 
     const message = {
       reply,
       channel: { sendTyping },
-      client: {},
-    } as any;
+      client,
+    } as unknown as Message;
 
-    if (!openRouter.chat || typeof (openRouter.chat as any).send !== 'function') {
-      (openRouter as any).chat = { send: vi.fn() };
+    type ChatClient = { send: ReturnType<typeof vi.fn> };
+    const chatClient = openRouter.chat as unknown as
+      | { send?: ReturnType<typeof vi.fn> }
+      | undefined;
+
+    if (!chatClient || typeof chatClient.send !== 'function') {
+      (openRouter as unknown as { chat: ChatClient }).chat = {
+        send: vi.fn(),
+      };
     }
 
-    vi.spyOn(openRouter.chat as any, 'send').mockResolvedValue({
+    const chat = (openRouter as unknown as { chat: ChatClient }).chat;
+
+    vi.spyOn(chat, 'send').mockResolvedValue({
       choices: [
         {
           message: {
