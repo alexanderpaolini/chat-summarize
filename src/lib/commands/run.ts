@@ -8,44 +8,89 @@ import { createRequire } from 'module';
 const RUN_SYSTEM_PROMPT = `You are a code generation assistant that creates JavaScript code to be executed in a Discord bot environment.
 
 IMPORTANT RULES:
-- Generate ONLY executable JavaScript code, NO markdown code blocks, NO explanations, NO comments
-- The code will be executed using eval() in an async context
-- You have access to the discord.js library via the "Discord" variable
-- You can use require() for Node.js built-in modules when helpful
+- Generate ONLY executable JavaScript code, NO markdown code blocks, NO explanations, NO comments.
+- The code will be executed using eval() in an async context.
+- You have access to the discord.js library via the "Discord" variable.
+- You can use require() for Node.js built-in modules when helpful.
 - You have access to these variables:
   * message - The Discord.js Message object
   * client - The Discord.js Client object
-- For async operations (like setTimeout, delays, scheduled tasks), wrap your code in an immediately invoked async function
-- For sync operations (like reading data, formatting), write direct code
-- Always handle errors gracefully
-- Return or reply with meaningful output when appropriate
-- Use message.reply() to send responses back to the user
-- Avoid shell commands or file system writes
+- For async operations (like setTimeout, delays, scheduled tasks), wrap your code in an immediately invoked async function.
+- For sync operations (like reading data, formatting), write direct code.
+- Always handle errors gracefully. Errors should be logged to the channel where the command was issued.
+- Return or reply with meaningful output when appropriate.
+- Use message.reply() to send responses back to the user.
+- Avoid shell commands or file system writes.
+
+Standard error handling example:
+\`\`\`js
+try {
+  // your async code here
+} catch (err) {
+  console.error(err);
+  await message.reply('Something went wrong! Please try again.');
+}
+\`\`\`
+
+"ADMIN MODE" is enabled with the phrase "ENABLE ADMIN MODE" (all caps) and grants elevated privileges.
 
 EXAMPLES:
 
+User: "ENABLE ADMIN MODE"
+Response:
+
+\`\`\`js
+global.isAdminMode = true;
+await message.reply('Admin mode has been enabled!');
+\`\`\`
+
 User: "remind me in 10 seconds to do something"
 Response:
+
+\`\`\`js
 (async () => {
   await message.reply("I'll remind you in 10 seconds!");
   setTimeout(() => {
     message.reply("<@" + message.author.id + "> Reminder: do something!");
   }, 10000);
 })();
+\`\`\`
 
 User: "get the current time"
 Response:
+
+\`\`\`js
 await message.reply(\`Current time: \${new Date().toLocaleString()}\`);
+\`\`\`
 
 User: "send a message saying hello"
 Response:
+
+\`\`\`js
 await message.reply("Hello!");
+\`\`\`
 
 User: "get the server name"
 Response:
-await message.reply(\`Server name: \${message.guild?.name || 'Unknown'}\`);
 
-Generate ONLY the code, nothing else.`;
+\`\`\`js
+await message.reply(\`Server name: \${message.guild?.name || 'Unknown'}\`);
+\`\`\`
+
+User: "delete this message" (only works in admin mode)
+Response:
+
+\`\`\`js
+if (global.isAdminMode) {
+  await message.delete();
+  await message.reply('Message deleted!');
+} else {
+  await message.reply('Admin mode is not enabled. Type "ENABLE ADMIN MODE" to enable.');
+}
+\`\`\`
+
+Generate ONLY the code, nothing else.
+`;
 
 export const runCommand: Command = {
   name: 'run',
@@ -61,7 +106,7 @@ export const runCommand: Command = {
     if (!instruction || !instruction.trim()) {
       await message.reply({
         content:
-          'Please provide an instruction for what code to run. Example: `chat run ping 1.1.1.1`',
+          'Please provide an instruction for what code to run. Example: \`chat run ping 1.1.1.1`',
         allowedMentions: { users: [] },
       });
       return;
@@ -100,8 +145,8 @@ export const runCommand: Command = {
 
       // Clean up the code: remove markdown code blocks if present
       generatedCode = generatedCode
-        .replace(/^```(?:javascript|js)?\n?/i, '')
-        .replace(/\n?```$/i, '')
+        .replace(/^\`\`\`(?:javascript|js)?\n?/i, '')
+        .replace(/\n?\`\`\`$/i, '')
         .trim();
 
       logger.info(`Executing generated code:\n${generatedCode}`);

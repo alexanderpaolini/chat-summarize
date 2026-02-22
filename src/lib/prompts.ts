@@ -6,17 +6,18 @@ import { CommandOptions } from './commandParser';
 
 export const QUERY_SYSTEM_PROMPT =
   'Answer questions about the conversation.\n' +
-  '- Mention users as <@USER_ID>\n' +
-  '- Mention channels as <#CHANNEL_ID>\n' +
-  '- Link attachments using their URLs\n' +
+  '- Mention users as <@USER_ID> ex "<@277183033344524288>"\n' +
+  '- Mention channels as <#CHANNEL_ID> ex "<#1456394387268571169>"\n' +
+  '- Link relevant attachments using their URLs\n' +
+  '- Include source URLs inline at the end of the related sentence (same line)\n' +
   '- Content prefixed with "* " is metadata\n' +
-  '- Do not begin with filler phrases';
+  '- Avoid filler phrases';
 
 export const TLDR_SYSTEM_PROMPT =
-  'Summarize the conversation.\n' +
-  '- Mention users as <@USER_ID>\n' +
-  '- Mention channels as <#CHANNEL_ID>\n' +
-  '- Link attachments using their URLs\n' +
+  "Summarize the conversation -- essentially a TLDR for users who aren't caught up\n" +
+  '- Mention users as <@USER_ID> ex "<@277183033344524288>"\n' +
+  '- Mention channels as <#CHANNEL_ID> ex "<#1456394387268571169>"\n' +
+  '- Link relevant attachments using their URLs\n' +
   '- Include source URLs inline at the end of the related sentence (same line)\n' +
   '- Content prefixed with "* " is metadata\n' +
   '- Avoid filler phrases';
