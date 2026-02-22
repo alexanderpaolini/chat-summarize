@@ -30,6 +30,24 @@ describe('parseCommand', () => {
       const result = parseCommand('<@123456789> help');
       expect(result.command).toBe('help');
     });
+
+    it("should extract 'translate' command", () => {
+      const result = parseCommand('chat translate');
+      expect(result.command).toBe('translate');
+      expect(result.options.query).toBeUndefined();
+    });
+
+    it("should extract 'translate' command with language query", () => {
+      const result = parseCommand('chat translate to french');
+      expect(result.command).toBe('translate');
+      expect(result.options.query).toBe('to french');
+    });
+
+    it("should extract 'translate' command with @mention", () => {
+      const result = parseCommand('<@123456789> translate to english');
+      expect(result.command).toBe('translate');
+      expect(result.options.query).toBe('to english');
+    });
   });
 
   describe('help flag', () => {
