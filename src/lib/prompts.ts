@@ -26,6 +26,18 @@ export const OVERALL_TLDR_PROMPT =
   '- Include an overall TLDR at the beginning without citations';
 
 /**
+ * Get the system prompt for translation
+ */
+export function getTranslateSystemPrompt(targetLanguage: string): string {
+  return (
+    `Translate the provided content to ${targetLanguage}.\n` +
+    '- Preserve the original meaning and tone\n' +
+    '- Keep usernames, mentions, and URLs unchanged\n' +
+    '- Output only the translated text without commentary'
+  );
+}
+
+/**
  * Get the appropriate system prompt based on whether a query is provided
  */
 export function getSystemPrompt(

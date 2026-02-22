@@ -2,6 +2,7 @@ import { Command } from './types';
 import { summarizeCommand } from './summarize';
 import { helpCommand } from './help';
 import { runCommand } from './run';
+import { translateCommand } from './translate';
 
 class CommandRegistry {
   private commands: Map<string, Command> = new Map();
@@ -30,3 +31,4 @@ export const commandRegistry = new CommandRegistry();
 commandRegistry.register(summarizeCommand);
 commandRegistry.register(helpCommand);
 commandRegistry.register(runCommand);
+commandRegistry.register(translateCommand);

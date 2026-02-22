@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   getSystemPrompt,
   formatUserContent,
+  getTranslateSystemPrompt,
   QUERY_SYSTEM_PROMPT,
   TLDR_SYSTEM_PROMPT,
 } from '../src/lib/prompts';
@@ -66,6 +67,25 @@ describe('prompts', () => {
     it('should return content as-is when query is whitespace only', () => {
       const result = formatUserContent(content, '   ');
       expect(result).toBe(content);
+    });
+  });
+
+  describe('getTranslateSystemPrompt', () => {
+    it('should include the target language in the prompt', () => {
+      const result = getTranslateSystemPrompt('French');
+      expect(result).toContain('French');
+    });
+
+    it('should include translation instruction', () => {
+      const result = getTranslateSystemPrompt('English');
+      expect(result).toContain('Translate');
+      expect(result).toContain('English');
+    });
+
+    it('should instruct to keep usernames and URLs unchanged', () => {
+      const result = getTranslateSystemPrompt('Spanish');
+      expect(result).toContain('usernames');
+      expect(result).toContain('URLs');
     });
   });
 });

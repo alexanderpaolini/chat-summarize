@@ -27,6 +27,8 @@ export const helpCommand: Command = {
       .map(cmd => {
         if (cmd.name === 'summarize') {
           return '• `summarize` - Summarize messages in the channel (default command)';
+        } else if (cmd.name === 'translate') {
+          return '• `translate [to <language>]` - Translate messages to a target language (default: English)';
         } else if (cmd.name === 'run') {
           return '• `run <instruction>` - Generate and execute code based on natural language';
         } else if (cmd.name === 'help') {
@@ -56,6 +58,8 @@ ${commandList}
 \`chat summarize\` - Summarize messages from your previous message to now
 \`@bot summarize -S --amount 100\` - Summarize last 100 messages including bot messages
 \`chat what did Sarah say?\` - Ask a specific question about the conversation
+\`chat translate\` - Translate recent messages to English
+\`chat translate to french\` - Translate recent messages to French
 \`chat run remind me in 10 seconds to do something\` - Generate and run code
 \`@bot run ping 1.1.1.1\` - Execute a ping command
 \`@bot --help\` - Show this help message
