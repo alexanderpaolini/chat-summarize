@@ -16,13 +16,17 @@ beforeAll(async () => {
 
 describe('parseCommand - remind command', () => {
   it("should extract 'remind' command with instruction", () => {
-    const result = parseCommand('chat remind me in 10 minutes to check the oven');
+    const result = parseCommand(
+      'chat remind me in 10 minutes to check the oven'
+    );
     expect(result.command).toBe('remind');
     expect(result.options.query).toBe('me in 10 minutes to check the oven');
   });
 
   it("should extract 'remind' command from @mention format", () => {
-    const result = parseCommand('<@123456789> remind me in an hour to call mom');
+    const result = parseCommand(
+      '<@123456789> remind me in an hour to call mom'
+    );
     expect(result.command).toBe('remind');
     expect(result.options.query).toBe('me in an hour to call mom');
   });
@@ -34,9 +38,13 @@ describe('parseCommand - remind command', () => {
   });
 
   it('should handle remind with every/recurring phrasing', () => {
-    const result = parseCommand('chat remind me every tuesday at 5pm to go to taco bell');
+    const result = parseCommand(
+      'chat remind me every tuesday at 5pm to go to taco bell'
+    );
     expect(result.command).toBe('remind');
-    expect(result.options.query).toBe('me every tuesday at 5pm to go to taco bell');
+    expect(result.options.query).toBe(
+      'me every tuesday at 5pm to go to taco bell'
+    );
   });
 });
 

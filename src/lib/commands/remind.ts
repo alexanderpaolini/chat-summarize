@@ -108,7 +108,9 @@ export const remindCommand: Command = {
       });
 
       let generatedCode = String(res.choices[0].message.content ?? '');
-      logger.info(`Generated reminder code (${generatedCode.length} characters)`);
+      logger.info(
+        `Generated reminder code (${generatedCode.length} characters)`
+      );
 
       // Strip markdown code fences if present
       generatedCode = generatedCode
