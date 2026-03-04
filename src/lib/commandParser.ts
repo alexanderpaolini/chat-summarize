@@ -83,7 +83,8 @@ export function parseCommand(
       firstArg === 'summarize' ||
       firstArg === 'help' ||
       firstArg === 'run' ||
-      firstArg === 'translate'
+      firstArg === 'translate' ||
+      firstArg === 'remind'
     ) {
       command = firstArg;
       queryParts = nonFlagArgs.slice(1); // Remove command from query parts

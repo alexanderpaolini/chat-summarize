@@ -31,6 +31,8 @@ export const helpCommand: Command = {
           return '• `translate [to <language>]` - Translate messages to a target language (default: English)';
         } else if (cmd.name === 'run') {
           return '• `run <instruction>` - Generate and execute code based on natural language';
+        } else if (cmd.name === 'remind') {
+          return '• `remind <reminder>` - Schedule a reminder message';
         } else if (cmd.name === 'help') {
           return '• `help` - Show this help message';
         }
@@ -62,6 +64,8 @@ ${commandList}
 \`chat translate to french\` - Translate recent messages to French
 \`chat run remind me in 10 seconds to do something\` - Generate and run code
 \`@bot run ping 1.1.1.1\` - Execute a ping command
+\`chat remind me in an hour to check the oven\` - Schedule a reminder
+\`chat remind me every tuesday at 5pm to go to taco bell\` - Schedule a recurring reminder
 \`@bot --help\` - Show this help message
 `.trim();
 
