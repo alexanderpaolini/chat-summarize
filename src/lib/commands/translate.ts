@@ -46,7 +46,10 @@ function splitIntoChunks(text: string, maxLength = MAX_LENGTH) {
  */
 function parseTargetLanguage(query?: string): string {
   if (!query || !query.trim()) return DEFAULT_LANGUAGE;
-  const stripped = query.trim().replace(/^to\s+/i, '').trim();
+  const stripped = query
+    .trim()
+    .replace(/^to\s+/i, '')
+    .trim();
   return stripped || DEFAULT_LANGUAGE;
 }
 
