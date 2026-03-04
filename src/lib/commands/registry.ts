@@ -3,6 +3,7 @@ import { summarizeCommand } from './summarize';
 import { helpCommand } from './help';
 import { runCommand } from './run';
 import { translateCommand } from './translate';
+import { remindCommand } from './remind';
 
 class CommandRegistry {
   private commands: Map<string, Command> = new Map();
@@ -32,3 +33,4 @@ commandRegistry.register(summarizeCommand);
 commandRegistry.register(helpCommand);
 commandRegistry.register(runCommand);
 commandRegistry.register(translateCommand);
+commandRegistry.register(remindCommand);

@@ -106,7 +106,7 @@ export const runCommand: Command = {
     if (!instruction || !instruction.trim()) {
       await message.reply({
         content:
-          'Please provide an instruction for what code to run. Example: \`chat run ping 1.1.1.1`',
+          'Please provide an instruction for what code to run. Example: `chat run ping 1.1.1.1`',
         allowedMentions: { users: [] },
       });
       return;
@@ -145,8 +145,8 @@ export const runCommand: Command = {
 
       // Clean up the code: remove markdown code blocks if present
       generatedCode = generatedCode
-        .replace(/^\`\`\`(?:javascript|js)?\n?/i, '')
-        .replace(/\n?\`\`\`$/i, '')
+        .replace(/^```(?:javascript|js)?\n?/i, '')
+        .replace(/\n?```$/i, '')
         .trim();
 
       logger.info(`Executing generated code:\n${generatedCode}`);
