@@ -76,12 +76,18 @@ export const summarizeCommand: Command = {
         autoArchiveDuration: ThreadAutoArchiveDuration.OneHour,
       });
       const chunks = splitIntoChunks(summary);
-      let replyMsg: Message | undefined = undefined;
 
       logger.info(`Sending ${chunks.length} message chunk(s) as reply`);
 
-      for (let i = 0; i < chunks.length; i++) {
-        replyMsg = await (replyMsg ? replyMsg.reply : thread.send)({
+      let replyMsg = await thread.send({
+        content: chunks[0],
+        allowedMentions: {
+          users: [],
+        },
+      });
+
+      for (let i = 1; i < chunks.length; i++) {
+        replyMsg = await replyMsg.reply({
           content: chunks[i],
           allowedMentions: {
             users: [],
