@@ -21,7 +21,6 @@ Time parsing guidelines:
 - "in X minutes" → X * 60 * 1000 milliseconds
 - "in X hours" → X * 60 * 60 * 1000 milliseconds
 - "in X days" → X * 24 * 60 * 60 * 1000 milliseconds
-- "every X minutes/hours" → use setInterval
 - For specific times (e.g. "at 5pm"), compute ms from now using Date arithmetic.
 
 The code MUST follow this exact pattern:
@@ -32,7 +31,7 @@ The code MUST follow this exact pattern:
   }, <delay_ms>);
 })();
 
-For recurring reminders use setInterval instead of setTimeout.
+For recurring reminders use setInterval instead of setTimeout. (interval must be longer than 1 day)
 Generate ONLY the code, nothing else.`;
 
 /** Patterns that should never appear in generated reminder code */
@@ -123,7 +122,7 @@ export const remindCommand: Command = {
       if (!isSafeReminderCode(generatedCode)) {
         logger.error('Generated reminder code failed safety check');
         await message.reply({
-          content: 'REMINDER FAILED! Could not safely schedule your reminder.',
+          content: 'REMINDER FAILED!',
           allowedMentions: { users: [] },
         });
         return;
