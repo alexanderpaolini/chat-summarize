@@ -1,4 +1,4 @@
-import { GuildTextBasedChannel } from 'discord.js';
+import { GuildTextBasedChannel, ThreadAutoArchiveDuration } from 'discord.js';
 import { Command, CommandContext } from './types';
 import { contextResolver } from '../contextResolver';
 import { summarize } from '../summarize';
@@ -67,43 +67,23 @@ export const summarizeCommand: Command = {
         botUserTag
       );
 
-      let replyMsg = message;
+      const thread = await message.startThread({
+        name: 'summary',
+        autoArchiveDuration: ThreadAutoArchiveDuration.OneHour,
+      });
       const chunks = splitIntoChunks(summary);
+      let replyMsg = undefined;
 
       logger.info(`Sending ${chunks.length} message chunk(s) as reply`);
 
       const msgs = [message];
       for (let i = 0; i < chunks.length; i++) {
-        replyMsg = await replyMsg.reply({
+        replyMsg = await (replyMsg ? replyMsg.reply : thread.send)({
           content: chunks[i],
           allowedMentions: {
             users: [],
           },
         });
-        msgs.push(replyMsg);
-      }
-
-      const ttl = options.ttl ?? DEFAULT_TTL;
-      logger.info(`Messages will be deleted after ${ttl} seconds`);
-
-      await new Promise(r => setTimeout(r, ttl * 1000));
-
-      let deletionFailures = 0;
-      for (const msg of msgs) {
-        try {
-          await msg.delete();
-        } catch (err) {
-          deletionFailures++;
-          logger.warn(`Failed to delete message: ${err}`);
-        }
-      }
-
-      if (deletionFailures === 0) {
-        logger.info('All messages deleted successfully');
-      } else {
-        logger.warn(
-          `Completed with ${deletionFailures} message deletion failure(s)`
-        );
       }
     } catch (err) {
       await message.reply('FAILED TO SUMMARIZE!');
