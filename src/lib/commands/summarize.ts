@@ -1,4 +1,8 @@
-import { GuildTextBasedChannel, ThreadAutoArchiveDuration } from 'discord.js';
+import {
+  GuildTextBasedChannel,
+  Message,
+  ThreadAutoArchiveDuration,
+} from 'discord.js';
 import { Command, CommandContext } from './types';
 import { contextResolver } from '../contextResolver';
 import { summarize } from '../summarize';
@@ -72,11 +76,10 @@ export const summarizeCommand: Command = {
         autoArchiveDuration: ThreadAutoArchiveDuration.OneHour,
       });
       const chunks = splitIntoChunks(summary);
-      let replyMsg = undefined;
+      let replyMsg: Message | undefined = undefined;
 
       logger.info(`Sending ${chunks.length} message chunk(s) as reply`);
 
-      const msgs = [message];
       for (let i = 0; i < chunks.length; i++) {
         replyMsg = await (replyMsg ? replyMsg.reply : thread.send)({
           content: chunks[i],
@@ -88,7 +91,7 @@ export const summarizeCommand: Command = {
     } catch (err) {
       await message.reply('FAILED TO SUMMARIZE!');
       logger.error('Failed to summarize messages');
-      logger.error(err);
+      console.error(err);
     }
   },
 };
