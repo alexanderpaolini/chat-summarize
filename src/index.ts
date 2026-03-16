@@ -17,9 +17,7 @@ const isPrompt = (m: Message) => {
   const content = m.content.toLowerCase();
   const userId = client.user?.id;
   return (
-    content === 'chat' ||
-    content.startsWith('chat ') ||
-    content.startsWith('chat\n') ||
+    content.startsWith(m.guild!.members.me!.nickname ?? 'chat') ||
     (userId && m.mentions.users.has(userId))
   );
 };
