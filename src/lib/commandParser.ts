@@ -85,8 +85,10 @@ export function parseCommand(
       firstArg === 'run' ||
       firstArg === 'translate' ||
       firstArg === 'remind'
-    )
+    ) {
       command = firstArg;
+      queryParts = nonFlagArgs.slice(1); // Remove command from query parts
+    }
   }
 
   // Extract query from remaining non-flag arguments
