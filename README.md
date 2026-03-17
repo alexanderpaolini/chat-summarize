@@ -1,5 +1,8 @@
 # Chat, summarize
 
+> [!IMPORTANT]
+> `Chat, summarize` is almost entirely AI generated being built as a dive into agentic coding. Almost all code is written by one coding agent or another (see contributors chart). This is not a reflection of my general work, just a toy pet project. 
+
 `Chat, summarize` is a discord bot that summarizes the last `N` messages, such that your last message in that channel was message `N + 1`.
 
 Tired of scrolling up in your channels and reading hundreds of messages? `Chat, summarize` has you covered.
