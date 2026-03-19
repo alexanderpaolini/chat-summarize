@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: chat-summarize-bot
+    container_name: bot
     restart: unless-stopped
     env_file:
       - path: .env

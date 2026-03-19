@@ -1,14 +1,9 @@
-import { createEnv } from '@t3-oss/env-core';
-import { z } from 'zod';
+import { createEnv } from "@t3-oss/env-nuxt";
+import { z } from "zod";
 
 export const env = createEnv({
   server: {
-    OPENROUTER_API_KEY: z.string(),
     DISCORD_TOKEN: z.string(),
-    ADMIN_USER_IDS: z
-      .string()
-      .optional()
-      .transform(val => (val ? val.split(',').map(id => id.trim()) : [])),
+    OPENROUTER_API_KEY: z.string(),
   },
-  runtimeEnv: process.env,
 });

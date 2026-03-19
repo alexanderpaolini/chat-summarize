@@ -1,20 +1,36 @@
-# Use lightweight Node.js Alpine image
-FROM node:20-alpine
+#
+# see https://bun.com/docs/guides/ecosystem/docker
+#
 
-# Enable corepack to use pnpm (included with Node.js 20)
-RUN corepack enable
+# use the official Bun image
+# see all versions at https://hub.docker.com/r/oven/bun/tags
+FROM oven/bun:1 AS base
+WORKDIR /usr/src/app
 
-# Set working directory
-WORKDIR /app
+# install dependencies into temp directory
+# this will cache them and speed up future builds
+FROM base AS install
+RUN mkdir -p /temp/dev
+COPY package.json bun.lock /temp/dev/
+RUN cd /temp/dev && bun install --frozen-lockfile
 
-# Copy package files
-COPY package.json pnpm-lock.yaml ./
+# install with --production (exclude devDependencies)
+RUN mkdir -p /temp/prod
+COPY package.json bun.lock /temp/prod/
+RUN cd /temp/prod && bun install --frozen-lockfile --production
 
-# Install all dependencies (includes tsx and dotenv-cli needed for runtime)
-RUN pnpm install --frozen-lockfile
-
-# Copy source code and configuration
+# copy node_modules from temp directory
+# then copy all (non-ignored) project files into the image
+FROM base AS prerelease
+COPY --from=install /temp/dev/node_modules node_modules
 COPY . .
 
-# Start the application
-CMD ["pnpm", "start"]
+# copy production dependencies and source code into final image
+FROM base AS release
+COPY --from=install /temp/prod/node_modules node_modules
+COPY --from=prerelease /usr/src/app/ .
+
+# run the app
+USER bun
+EXPOSE 3000/tcp
+ENTRYPOINT [ "bun", "run", "src/index.ts" ]

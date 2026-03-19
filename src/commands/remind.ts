@@ -1,9 +1,12 @@
-import { Command, CommandContext } from './types';
-import { openRouter } from '../openRouter';
-import { logger } from '../logger';
-import { DEFAULT_LLM_MODEL } from '../../options';
+import type { Command, CommandContext } from "../types";
+import { openRouter } from "../lib/OpenRouter";
+import { logger } from "../lib/logger";
+import { DEFAULT_LLM_MODEL } from "../options";
+import { TextChannel } from "discord.js";
+import { indent } from "../util";
 
-const REMIND_SYSTEM_PROMPT = `You are a reminder scheduling assistant for a Discord bot.
+const SYSTEM_PROMPT = `You are a reminder scheduling assistant for a Discord bot.
+
 Your ONLY job is to generate JavaScript code that schedules a reminder message using setTimeout or setInterval.
 
 STRICT RULES - You MUST follow ALL of these:
@@ -34,58 +37,25 @@ The code MUST follow this exact pattern:
 For recurring reminders use setInterval instead of setTimeout. (interval must be longer than 1 day)
 Generate ONLY the code, nothing else.`;
 
-/** Patterns that should never appear in generated reminder code */
-const BLOCKED_PATTERNS = [
-  /\brequire\s*\(/,
-  /\beval\s*\(/,
-  /\bnew\s+Function\b/,
-  /\bBuffer\b/,
-  /\batob\s*\(/,
-  /\bbtoa\s*\(/,
-  /\bfetch\s*\(/,
-  /\bXMLHttpRequest\b/,
-  /\bchild_process\b/,
-  /\bprocess\s*\./,
-  /\bimport\s*\(/,
-  /\bglobal\s*\./,
-  /\bfs\s*\./,
-  /base64/i,
-];
-
-function isSafeReminderCode(code: string): boolean {
-  for (const pattern of BLOCKED_PATTERNS) {
-    if (pattern.test(code)) {
-      logger.warn(`Blocked unsafe pattern in remind code: ${pattern}`);
-      return false;
-    }
-  }
-  return true;
-}
-
 export const remindCommand: Command = {
-  name: 'remind',
-  description: 'Schedule a reminder message',
-  requiresPermission: false,
+  name: "remind",
+  description: "Schedule a reminder message",
   execute: async (context: CommandContext) => {
-    const { message, options } = context;
+    const { message, options, content } = context;
 
-    const instruction = options.query;
-
-    if (!instruction || !instruction.trim()) {
-      await message.reply({
-        content:
-          'Please tell me what to remind you about. Example: `chat remind me in 10 minutes to check the oven`',
-        allowedMentions: { users: [] },
-      });
+    if (!content.trim()) {
+      await message.reply(
+        "Please tell me what to remind you about." +
+          'Example: "chat remind me in 10 minutes to check the oven"',
+      );
       return;
     }
 
     try {
-      logger.info(`Generating reminder code for: ${instruction}`);
+      logger.info(`Generating reminder code for: ${content}`);
 
-      if ('sendTyping' in message.channel) {
+      if (message.channel instanceof TextChannel)
         await message.channel.sendTyping();
-      }
 
       const model = options.model || DEFAULT_LLM_MODEL;
       logger.info(`Calling LLM with model: ${model}`);
@@ -95,54 +65,38 @@ export const remindCommand: Command = {
           model,
           messages: [
             {
-              role: 'system',
-              content: REMIND_SYSTEM_PROMPT,
+              role: "system",
+              content: SYSTEM_PROMPT,
             },
             {
-              role: 'user',
-              content: instruction,
+              role: "user",
+              content,
             },
           ],
         },
       });
 
-      let generatedCode = String(res.choices[0].message.content ?? '');
-      logger.info(
-        `Generated reminder code (${generatedCode.length} characters)`
-      );
-
-      // Strip markdown code fences if present
+      let generatedCode = String(res.choices[0]?.message.content ?? "");
       generatedCode = generatedCode
-        .replace(/^```(?:javascript|js)?\n?/i, '')
-        .replace(/\n?```$/i, '')
+        .replace(/^```(?:javascript|js)?\n?/i, "")
+        .replace(/\n?```$/i, "")
         .trim();
-
-      logger.info(`Executing reminder code:\n${generatedCode}`);
-
-      if (!isSafeReminderCode(generatedCode)) {
-        logger.error('Generated reminder code failed safety check');
-        await message.reply({
-          content: 'REMINDER FAILED!',
-          allowedMentions: { users: [] },
-        });
-        return;
-      }
-
+      logger.info(`Executing reminder code:${indent(generatedCode)}`);
       const executeFn = new Function(
-        'message',
+        "message",
         `return (async () => {
           ${generatedCode}
-        })();`
+        })();`,
       );
 
       await executeFn(message);
 
-      logger.info('Reminder scheduled successfully');
+      logger.info("Reminder scheduled successfully");
     } catch (err) {
-      logger.error('Failed to execute remind command');
+      logger.error("Failed to execute remind command");
       logger.error(err);
       await message.reply({
-        content: 'REMINDER FAILED! Please try again.',
+        content: "REMINDER FAILED! Please try again.",
         allowedMentions: { users: [] },
       });
     }

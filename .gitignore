@@ -1,20 +1,34 @@
-# mac
-.DS_Store
+# dependencies (bun install)
+node_modules
 
-# node
-node_modules/
+# output
+out
+dist
+*.tgz
 
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
+# code coverage
+coverage
+*.lcov
 
-# local env files
+# logs
+logs
+_.log
+report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
+
+# dotenv environment variable files
 .env
-.env*.local
-.env-e
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
 
-# typescript
-dist/
+# caches
+.eslintcache
 .cache
+*.tsbuildinfo
+
+# IntelliJ based IDEs
+.idea
+
+# Finder (MacOS) folder config
+.DS_Store
